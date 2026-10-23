@@ -1,0 +1,89 @@
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>English For All</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+
+  
+  <section id="inicio" class="tela ativa">
+    <h1 class="logo">English<br>For All</h1>
+    <p>Sua plataforma gratuita e sem anúncios de estudo de inglês.</p>
+    <p>Come learn with us!!</p>
+    <button onclick="ir('cad1')">Crie sua conta</button>
+    <p class="pequeno">Já tem uma conta? <a href="#" onclick="ir('login')">Login</a></p>
+  </section>
+
+  inicial precisa dele) -->
+  <section id="login" class="tela">
+    <h2>Welcome<br>to English<br>For All</h2>
+    <label>Email <input id="l-email" type="email"></label>
+    <label>Senha <input id="l-senha" type="password"></label>
+    <p class="erro" id="l-erro"></p>
+    <button onclick="entrar()">Entrar</button>
+  </section>
+
+ 
+  <section id="cad1" class="tela">
+    <h2>Welcome<br>to English<br>For All</h2>
+    <label>Nome <input id="c-nome"></label>
+    <label>Email <input id="c-email" type="email"></label>
+    <label>Ano escolar <input id="c-ano"></label>
+    <p class="erro" id="c1-erro"></p>
+    <button onclick="continuarCadastro()">Continue</button>
+  </section>
+
+ 
+  <section id="cad2" class="tela">
+    <h2>Welcome<br>to English<br>For All</h2>
+    <label>Senha: <input id="c-senha" type="password"></label>
+    <label>Confirme sua senha: <input id="c-confirma" type="password"></label>
+    <p class="erro" id="c-erro"></p>
+    <button onclick="cadastrar()">Confirmar</button>
+  </section>
+
+  <section id="dias" class="tela">
+    <h2>Em que dias você pode estudar inglês?</h2>
+    <div id="lista-dias"></div>
+    <button onclick="confirmarDias()">Continue</button>
+  </section>
+
+  <section id="nivel" class="tela">
+    <h2>Em sua visão, qual seu nível de inglês?</h2>
+    <div id="lista-niveis"></div>
+    <button onclick="confirmarNivel()">Continue</button>
+  </section>
+
+  <section id="cronograma" class="tela">
+    <h2 class="faixa">Cronograma</h2>
+    <table id="tabela-cron"></table>
+    <button onclick="abrirMonitoramento()">Confirmar</button>
+  </section>
+
+  <section id="exercicio" class="tela">
+    <h2 class="faixa">Exercise 1</h2>
+    <div id="exercicio-itens"></div>
+    <button onclick="enviarExercicio()">Send it</button>
+  </section>
+
+  <section id="monitor" class="tela">
+    <h2 class="faixa" id="m-titulo">Learned words</h2>
+    <div class="duas-colunas">
+      <nav>
+        <a href="#" onclick="aba('aprendidas')">Learned</a>
+        <a href="#" onclick="aba('a_aprender')">To learn</a>
+        <a href="#" onclick="aba('cronograma')">Calendar</a>
+        <a href="#" onclick="aba('nivel')">Level</a>
+      </nav>
+      <div id="m-conteudo"></div>
+    </div>
+  </section>
+
+</main>
+<script src="app.js"></script>
+</body>
+</html>
