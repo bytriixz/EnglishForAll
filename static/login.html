@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<style>
+    body,html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1b1b1b;
+    }
+
+    .container{
+        display: flex;
+        width: 100%;
+        max-width: 800px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 1.0);
+        border-radius: 8px;
+        margin: 20px;
+        overflow: hidden;
+    }
+
+    .logo-section {
+      flex: 1;
+      min-width:350px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .logo-section img {
+        max-width:80%;
+        max-height: 80%;
+    }
+
+    .login-section {
+        flex: 1;
+        min-width:350px;
+        background-color: #ffde59;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .login-section h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #004aad;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 12px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .login-button:hover {
+        background-color: #5f6546;
+    }
+
+    .links {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .links a {
+        font-weight: bold;
+        color: #004aad;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .links a:hover {
+        text-decoration: underline;
+    }
+
+    .message {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+        color: #fff
+    }
+
+    @media (max-width: 768px) {
+        .container{
+            flex-direction: column;
+            width: 90%;
+            height: auto;
+        }
+
+        .logo-section, .login-section {
+            flex: none;
+            width: 100%;
+        }
+
+        .logo-section {
+            padding: 30px 20px;
+            min-height: 200px;
+        }
+
+        .login-section {
+            padding: 30px;
+        }
+
+    }   
+
+</style>
+
+<body>
+    <div class="container">
+    <div class="logo-section">
+      <img src="images/logo.png" alt="EnglishForAll">
+    </div>
+    <div class="login-section">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="username">Usuário:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Senha:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="login-button">Entrar</button>
+        <div class="links">
+          <a href="#">Esqueceu a senha?</a> | <a href="cadastro.html">Criar conta</a>
+        </div>
+        <p class="message" id="msg"></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    //obtendo informações do formulário de login
+    const form = document.getElementById('loginForm')
+    const msg = document.getElementById('msg')
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        //criando variáveis para verificação
+        const username = form.username.value;
+        const password = form.password.value;
+
+        try {
+            //envia os dados para a função /login no servidor
+            const response = await fetch('/login',  {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password})
+            });
+
+            const data = await response.json();
+
+            //mensagem de sucesso e redirecionamento para login
+            if (response.ok) {
+                msg.textContent = "Login Realizado com sucesso.";
+                msg.style.color = "green";
+                setTimeout(() => window.location.href = "/inicio.html", 1000);
+            
+        //mensagens de erro
+            }else {
+                msg.textContent = (data.error) || "Credenciais inválidas."
+                msg.style.color = "red";
+            }
+
+        }catch (err) {
+            msg.textContent = "Erro de conexão com o servidor."
+            msg.style.color = "red";
+        }
+    });
+
+  </script>
+
+</body>
+</html>
