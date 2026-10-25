@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+</head>
+
+<style>
+    body,html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1b1b1b;
+    }
+
+    .container{
+        display: flex;
+        width: 100%;
+        max-width: 800px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 1.0);
+        border-radius: 8px;
+        margin: 20px;
+        overflow: hidden;
+        background-color: white;
+    }
+
+    h3{
+        color: #004aad;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: black;
+        color: #ffde59;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #5f6546;
+    }
+
+    button.selecionado{
+        background-color: #ffde59;
+        color:#1b1b1b;
+        font-weight: bold;
+    }
+
+    .enviar button{
+        border-radius: 25px;
+        background-color: #004aad;
+        color: black;
+        font-weight: bold;
+    }
+
+    .enviar button:hover{
+        background-color: rgb(99, 84, 238);
+    }
+
+    .voltar button{
+        background-color: #ffde59;
+        border-radius: 25px;
+        margin-bottom: 5px;
+        color:black;
+        font-weight: bold;
+    }
+
+    .voltar button:hover{
+        background-color: #ffde59;
+    }
+
+    .pagina {
+        display: none;
+        width: 100%;
+    }
+
+    .pagina.ativa {
+        display: flex;
+    }
+
+    .opcoes {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+
+    .logo-section {
+      flex: 1;
+      min-width:350px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .logo-section img {
+        max-width:80%;
+        max-height: 80%;
+    }
+
+    .container-interno{
+        flex: 1;
+        min-width:350px;
+        background-color: white;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .container-interno h3 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #004aad;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <section id="form-datas" class="pagina ativa">
+            <div class="logo-section">
+                <img src="images/logo.png" alt="EnglishForAll">
+            </div>
+
+            <div class="container-interno">
+            <div class="opcoes">
+                <h3>Em que dias você pode estudar inglês?</h3>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)"> Domingo</button>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)">Segunda</button>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)">Terça</button>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)">Quarta</button>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)">Quinta</button>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)">Sexta</button>
+                <button type="button" class="opcao multipla" onclick="selecionar(this)">Sábado</button><br>
+            </div>
+            
+            <div class="enviar">
+                <button type="button" onclick="proximaPagina('form-datas','form-nivel')">Continuar</button>     
+            </div>
+            </div>
+        </section>
+
+        <section id="form-nivel" class="pagina">
+            <div class="logo-section">
+                <img src="images/logo.png" alt="EnglishForAll">
+            </div>
+
+            <div class="container-interno">
+            <div class="opcoes">
+                <h3>Em sua visão, qual seu nível de inglês?</h3>
+                <button type="button" class="opcao" onclick="selecionar(this)">Iniciante</button>
+                <button type="button" class="opcao" onclick="selecionar(this)">Intermediário</button>
+                <button type="button" class="opcao" onclick="selecionar(this)">Avançado</button><br>
+            </div>
+            
+            <div class="voltar">
+                <button type="button" onclick="proximaPagina('form-nivel','form-datas')">Voltar</button><br>
+            </div>
+
+            <div class="enviar">
+                <button type="button" onclick="enviarForm()">Enviar</button>     
+            </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        //função de marcar a opção desejada
+        function selecionar(elemento){
+            //impede que a opção seja anulada ao trocar de seção
+            let secaoAtual = elemento.closest('section');
+            let opcoesDaSecao = secaoAtual.querySelectorAll('.opcao');
+
+            //garante que o formulario de nivel tenha apenas uma escolha
+            if (secaoAtual.id === 'form-nivel'){
+                opcoesDaSecao.forEach(function(item){
+                    item.classList.remove('selecionado')
+                })
+                elemento.classList.add('selecionado')
+            } else {    //permite que o formulario de datas tenha múltipla escolha
+                elemento.classList.toggle('selecionado')
+            }
+        }
+
+        //função para mudar de página
+        function proximaPagina(paginaAtual,proxPagina){
+            //verifica se a pergunta foi respondida antes de trocar de página
+            let secaoAtual = document.getElementById(paginaAtual);
+            let escolhida = secaoAtual.querySelector('.opcao.selecionado')
+
+            //mensagem de alerta
+            if (paginaAtual === 'form-datas' && !escolhida){
+                alert('Selecione uma das opções')
+                return;
+            }
+
+            //oculta a seção atual e exibe a seção desejada
+            document.getElementById(paginaAtual).classList.remove('ativa');
+            document.getElementById(proxPagina).classList.add('ativa');
+        }
+
+    </script>
+</body>
+</html>
