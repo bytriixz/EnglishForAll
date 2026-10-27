@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+ <style>
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1b1b1b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
+        width: fit-content;
+    }
+
+    .card {
+        background-color: #161616;
+        border-radius: 15px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        width: 250px; 
+        height: 200px;
+        text-decoration: none;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        background-color: #ffde59;
+    }
+
+    .card span.icon {
+        font-size: 48px;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+        color: white;
+        margin: 0;
+    }
+
+    .card:hover .icon {
+        color: #004aad;
+    }
+
+    .card:hover h3 {
+        color: #004aad;
+    }
+  </style>
+
+<body>
+    <div class="container">
+    <a href="functions/learned.html" class="card">
+      <span class="icon material-symbols-rounded">school</span>
+      <h3>Learned</h3>
+    </a>
+    <a href="functions/tolearn.html" class="card">
+      <span class="icon material-symbols-rounded">book_ribbon</span>
+      <h3>To Learn</h3>
+    </a>
+    <a href="functions/calendar.html" class="card">
+      <span class="icon material-symbols-rounded">calendar_month</span>
+      <h3>Calendar</h3>
+    </a>
+    <a href="functions/level.html" class="card">
+      <span class="icon material-symbols-rounded">cognition</span>
+      <h3>Level</h3>
+    </a>
+  </div>
+</body>
+</html>
