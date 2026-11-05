@@ -192,6 +192,39 @@
             }
         }
 
+        //função para enviar o questionário
+        async function enviarForm(){
+            //coleta as respostas do questionario
+            const diasEscolhidos = Array.from(document.querySelectorAll('#form-datas .opcao.selecionado')).map(el => el.textContent.trim());
+            const nivelEscolhido = document.querySelector('#form-nivel .opcao.selecionado');
+
+            if (!nivelEscolhido){
+                alert("Selecione o seu nível de inglês");
+                return;
+            }
+
+            const nivel = nivelEscolhido.textContent.trim();
+
+            try{
+                const response = await fetch('/salvar-questionario',{
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({dias: diasEscolhidos, nivel: nivel})
+                });
+
+                if (response.ok){
+                    window.location.href = "/inicio.html";
+                }else{
+                    alert("Erro ao salvar respostas");
+                }
+
+            }catch(err){
+                console.error("Erro de conexão: ",err)
+                alert("Erro de conexão com o servidor.")
+            }
+
+        }
+
         //função para mudar de página
         function proximaPagina(paginaAtual,proxPagina){
             //verifica se a pergunta foi respondida antes de trocar de página

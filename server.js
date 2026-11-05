@@ -46,6 +46,9 @@ const Usuario = sequelize.define("Usuario", {
   email: { type: DataTypes.STRING, allowNull: false, unique: true },
   username: { type: DataTypes.STRING, allowNull: false, unique: true },
   password: { type: DataTypes.STRING, allowNull: false },
+  questRespondido: {type: DataTypes.BOOLEAN, defaultValue: false },
+  datas: { type: DataTypes.STRING, allowNull: "true"},
+  nivel: { type: DataTypes.STRING, allowNull: "true"},
 });
 
 //mantém a tabela atualizada
@@ -119,10 +122,42 @@ app.post("/login", async (req, res) => {
             email: usuario.email
         };
 
-        res.status(200).json({ message: "Login realizado com sucesso."});
+        res.status(200).json({ 
+            message: "Login realizado com sucesso.",
+            questRespondido: usuario.questRespondido
+        });
+
     }catch (error) {
         console.error("Erro no login: ", error);
         res.status(500).json({error: "Erro interno ao realizar login."})
+    }
+});
+
+app.post("/salvar-questionario", async (req, res)=>{
+    if (!req.session.user){
+        return res.status(401).json({ error: "Não autorizado." })
+    }
+
+    const { dias, nivel } = req.body;
+
+    try{
+        const usuario = await Usuario.findByPk(req.session.user.id);
+        if(!usuario){
+            return res.status(404).json({error: "Usuário não encontrado."})
+        }
+
+        usuario.datas = Array.isArray(dias) ? dias.join(", ") : dias;
+        usuario.nivel = nivel;
+        usuario.questRespondido = true;
+        
+        await usuario.save();
+
+        req.session.user.nivelIngles = nivel;
+
+        res.status(200).json({ message: "Respostas salvas com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao salvar questionário:", error);
+        res.status(500).json({ error: "Erro interno ao salvar." });
     }
 
 });
