@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página do Cronograma</title>
+    <style>
+      :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        font-family: 'Libre Baskerville',Georgia,Serif;
+        background-color: #9fc2cc;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .container {
+        display: flex;
+        width: 100%;
+        max-width: 950px;
+        min-height: 480px;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .logo-section {
+        width: 35%;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+      .logo-section img {
+        width: 85%;
+        max-width: 280px;
+      }
+
+      .calendar-section {
+        width: 65%;
+        background-color: var(--fundo);
+        padding: 25px;
+        color: var(--texto);
+      }
+      .calendar-section h1 {
+        text-align: center;
+        font-size: 22px;
+        font-style:italic;
+        font-weight: 400;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+
+      .navegacao {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
+      }
+      .navegacao h2 {
+        font-size: 16px;
+        text-align: center;
+        font-weight: normal
+      }
+      .navegacao button {
+        background-color: var(--botao);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-family: inherit;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .navegacao button:hover {
+        background-color: #1d2b4a;
+      }
+
+      .calendario {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+      .dia {
+        background-color: var(--barra);
+        color: var(--texto);
+        border-radius: 6px;
+        min-height: 150px;
+        padding: 10px 4px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .dia:hover {
+        transform: translateY(-3px);
+      }
+      .dia h3 {
+        color: white;
+        font-size: 11px;
+        margin-bottom: 15px;
+      }
+      .dia span {
+        font-size: 18px;
+      }
+      .dia.hoje {
+        border: 2px solid var(--botao);
+      }
+      .dia.selecionado {
+        border: 2px solid var(--texto);
+        background-color: #8bc8dc;
+      }
+
+      .atividade {
+        font-size: 11px;
+        margin-top: 8px;
+        color: var(--texto);
+      }
+      .sem-atividade {
+        font-size: 10px;
+        margin-top: 8px;
+      }
+
+      .detalhes-dia {
+        background-color: white;
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 20px;
+        color: var(--texto);
+      }
+      .detalhes-dia h3 {
+        margin-bottom: 10px;
+      }
+      .detalhes-dia p {
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
+
+      .informacao {
+        background-color: var(--barra);
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 25px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .informacao h3 {
+        margin-bottom: 6px;
+      }
+
+      @media (max-width: 850px) {
+        body {
+          align-items: flex-start;
+          padding: 15px;
+        }
+        .container {
+          flex-direction: column;
+        }
+        .logo-section {
+          width: 100%;
+          min-height: 130px;
+        }
+        .logo-section img {
+          max-width: 200px;
+        }
+        .calendar-section {
+          width: 100%;
+        }
+        .calendario {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      @media (max-width: 450px) {
+        .calendar-section {
+          padding: 20px 12px;
+        }
+        .calendario {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dia {
+          min-height: 130px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-section">
+        <img src="images/logo.png" alt="EnglishForAll" />
+      </div>
+
+      <div class="calendar-section">
+        <h1>Calendar</h1>
+        <div class="navegacao">
+          <button id="semanaAnterior">Anterior</button>
+          <h2 id="mesAno"></h2>
+          <button id="proximaSemana">Próxima</button>
+        </div>
+
+        <div class="calendario"></div>
+        <div class="detalhes-dia">
+          <h3 id="tituloDetalhes">Study activities</h3>
+          <div id="listaAtividades">
+            <p>Select a day to see your activities.</p>
+          </div>
+        </div>
+
+        <div class="informacao">
+          <h3>My study routine</h3>
+          <p>
+            Check your scheduled activities and keep practicing English
+            throughout the week!
+          </p>
+          <p id="nivelAluno"></p>
+          <p id="diasAluno"></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      //variável para armazenar a data utilizada no calendário
+      let dataAtual = new Date();
+
+      //nomes dos dias da semana
+      const nomesDias = [
+        "Domingo",
+        "Segunda",
+        "Terça",
+        "Quarta",
+        "Quinta",
+        "Sexta",
+        "Sábado",
+      ];
+
+      //recupera os dias de estudo escolhidos pelo aluno
+      const diasEscolhidos = JSON.parse(
+        localStorage.getItem("diasEstudo") || "[]",
+      );
+
+      //recupera o nível de inglês escolhido pelo aluno
+      const nivelAluno = localStorage.getItem("nivelEstudo");
+
+      // Mostra o nível escolhido pelo aluno
+      document.getElementById("nivelAluno").textContent =
+        "English level: " + nivelAluno;
+
+      // Mostra os dias escolhidos para estudar
+      document.getElementById("diasAluno").textContent =
+        "Study days: " + diasEscolhidos.join(", ");
+
+      //lista de atividades disponíveis para demonstração
+      const atividadesDisponiveis = [
+        "Listening",
+        "Vocabulary",
+        "Reading",
+        "Writing",
+        "Speaking",
+      ];
+
+      //organiza as atividades de acordo com os dias selecionados
+      const atividades = {};
+
+      // converte os nomes dos dias em números
+      const diasNumericos = diasEscolhidos
+        .map(function (dia) {
+          return nomesDias.findIndex(function (nome) {
+            return nome.toLowerCase() === dia.toLowerCase();
+          });
+        })
+        .filter(function (numero) {
+          return numero !== -1;
+        });
+
+      // remove possíveis dias repetidos
+      const diasUnicos = [...new Set(diasNumericos)];
+
+      // recupera ou cria a data inicial da programação
+      let inicioAtividades = localStorage.getItem("inicioAtividades");
+
+      if (!inicioAtividades) {
+        const hoje = new Date();
+        inicioAtividades =
+          hoje.getFullYear() +
+          "-" +
+          String(hoje.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(hoje.getDate()).padStart(2, "0");
+        localStorage.setItem("inicioAtividades", inicioAtividades);
+      }
+
+      // transforma a data inicial em uma data JavaScript
+      const partesData = inicioAtividades.split("-");
+      const dataInicio = new Date(
+        Number(partesData[0]),
+        Number(partesData[1]) - 1,
+        Number(partesData[2]),
+      );
+
+      // calcula a diferença entre duas datas
+      function diferencaDias(data1, data2) {
+        const primeira = Date.UTC(
+          data1.getFullYear(),
+          data1.getMonth(),
+          data1.getDate(),
+        );
+        const segunda = Date.UTC(
+          data2.getFullYear(),
+          data2.getMonth(),
+          data2.getDate(),
+        );
+        return Math.round((segunda - primeira) / (1000 * 60 * 60 * 24));
+      }
+
+      // organiza a atividade correspondente a cada data
+      function obterAtividade(dataDia) {
+        if (diasUnicos.length === 0) {
+          return null;
+        }
+
+        const diferenca = diferencaDias(dataInicio, dataDia);
+
+        if (diferenca < 0) {
+          return null;
+        }
+
+        // verifica se o dia foi escolhido pelo estudante
+        if (!diasUnicos.includes(dataDia.getDay())) {
+          return null;
+        }
+
+        // conta quantos dias de estudo ocorreram desde o início
+        let quantidadeAtividades = 0;
+
+        for (let i = 0; i <= diferenca; i++) {
+          const dataVerificada = new Date(dataInicio);
+          dataVerificada.setDate(dataInicio.getDate() + i);
+          if (diasUnicos.includes(dataVerificada.getDay())) {
+            quantidadeAtividades++;
+          }
+        }
+
+        // identifica a posição da atividade na sequência
+        const indiceAtividade =
+          (quantidadeAtividades - 1) % atividadesDisponiveis.length;
+        return atividadesDisponiveis[indiceAtividade];
+      }
+
+      // preenche o objeto de atividades para a semana exibida
+      function organizarAtividades(inicioSemana) {
+        // limpa as atividades anteriores
+        Object.keys(atividades).forEach(function (chave) {
+          delete atividades[chave];
+        });
+
+        diasUnicos.forEach(function (numeroDia) {
+          const dataDia = new Date(inicioSemana);
+          dataDia.setDate(inicioSemana.getDate() + numeroDia);
+          const atividade = obterAtividade(dataDia);
+          if (atividade) {
+            atividades[numeroDia] = [atividade];
+          }
+        });
+      }
+
+      //botão para voltar uma semana no calendário
+      document
+        .getElementById("semanaAnterior")
+        .addEventListener("click", function () {
+          dataAtual.setDate(dataAtual.getDate() - 7);
+          mostrarCalendario();
+        });
+
+      //botão para avançar uma semana no calendário
+      document
+        .getElementById("proximaSemana")
+        .addEventListener("click", function () {
+          dataAtual.setDate(dataAtual.getDate() + 7);
+          mostrarCalendario();
+        });
+
+      //função para mostrar as atividades do dia selecionado
+      function mostrarAtividades(indice, dataDia, dia) {
+        document.querySelectorAll(".dia").forEach(function (elemento) {
+          elemento.classList.remove("selecionado");
+        });
+        dia.classList.add("selecionado");
+        document.getElementById("tituloDetalhes").textContent =
+          dataDia.toLocaleDateString("pt-BR", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+          });
+        const lista = document.getElementById("listaAtividades");
+        lista.innerHTML = "";
+        if (atividades[indice]) {
+          atividades[indice].forEach(function (atividade) {
+            const item = document.createElement("p");
+            item.textContent = "• " + atividade;
+            lista.appendChild(item);
+          });
+        } else {
+          lista.textContent = "No activities scheduled for this day.";
+        }
+      }
+
+      //função para atualizar e exibir o calendário semanal
+      function mostrarCalendario() {
+        const calendario = document.querySelector(".calendario");
+        const mesAno = document.getElementById("mesAno");
+        calendario.innerHTML = "";
+
+        //identifica o primeiro dia da semana
+        const inicioSemana = new Date(dataAtual);
+        inicioSemana.setDate(dataAtual.getDate() - dataAtual.getDay());
+
+        // organiza as atividades da semana
+        organizarAtividades(inicioSemana);
+
+        //atualiza o mês e o ano exibidos
+        mesAno.textContent = inicioSemana
+          .toLocaleDateString("pt-BR", {
+            month: "long",
+            year: "numeric",
+          })
+          .replace(/^\w/, (letra) => letra.toUpperCase());
+
+        //armazena a data atual
+        const hoje = new Date();
+
+        //cria os sete dias da semana no calendário
+        for (let i = 0; i < 7; i++) {
+          const dataDia = new Date(inicioSemana);
+          dataDia.setDate(inicioSemana.getDate() + i);
+          const dia = document.createElement("div");
+          dia.classList.add("dia");
+
+          //exibe o nome do dia da semana
+          const nome = document.createElement("h3");
+          nome.textContent = nomesDias[i];
+
+          //exibe o número do dia
+          const numero = document.createElement("span");
+          numero.textContent = dataDia.getDate();
+          dia.appendChild(nome);
+          dia.appendChild(numero);
+
+          //verifica se a data corresponde ao dia atual
+          if (dataDia.toDateString() === hoje.toDateString()) {
+            dia.classList.add("hoje");
+          }
+
+          //exibe as atividades programadas para o dia
+          if (atividades[i]) {
+            atividades[i].forEach(function (atividade) {
+              const item = document.createElement("div");
+              item.classList.add("atividade");
+              item.textContent = atividade;
+              dia.appendChild(item);
+            });
+          } else {
+            const vazio = document.createElement("p");
+            vazio.classList.add("sem-atividade");
+            vazio.textContent = "No activities";
+            dia.appendChild(vazio);
+          }
+
+          //permite selecionar um dia para visualizar suas atividades
+          dia.addEventListener("click", function () {
+            mostrarAtividades(i, dataDia, dia);
+          });
+          calendario.appendChild(dia);
+
+          //seleciona automaticamente o dia atual ao abrir o calendário
+          if (dataDia.toDateString() === hoje.toDateString()) {
+            mostrarAtividades(i, dataDia, dia);
+          }
+        }
+      }
+      mostrarCalendario();
+    </script>
+  </body>
+</html>
