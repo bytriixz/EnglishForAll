@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administração</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
+<style>
+  :root{--fundo:#c3dde3;--barra:#55b4d8;--botao:#4a7fc1;--texto:#1d2b4a}
+  *{box-sizing:border-box}
+  body{margin:0;background:#9fc2cc;font-family:'Libre Baskerville',Georgia,serif;color:var(--texto);display:flex;justify-content:center}
+  .tela{width:100%;max-width:620px;min-height:100vh;background:var(--fundo);padding:32px 28px}
+  h1{margin:0 0 28px;font-style:italic;font-weight:400;letter-spacing:.15em;text-transform:uppercase;text-align:center;font-size:22px}
+  h2{margin:32px 0 0;font-size:18px}
+  label{display:block;margin:16px 0 6px;font-size:15px}
+  input[type=text],select,textarea{width:100%;border:0;border-radius:4px;background:var(--barra);padding:8px 10px;font:inherit;font-size:15px;color:var(--texto)}
+  textarea{min-height:80px;resize:vertical}
+  input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--texto)}
+  .linha{display:flex;gap:8px;align-items:center}
+  .linha input[type=text]{flex:1}
+  .alt{margin-top:8px}
+  .alt input[type=radio]{width:20px;height:20px;accent-color:var(--botao)}
+  .btn{padding:9px 20px;border:0;border-radius:4px;background:var(--botao);color:#fff;font:inherit;font-size:15px;cursor:pointer}
+  .btn:hover{background:#3b69a3}
+  .btn.principal{display:block;margin:24px auto 0;font-size:17px}
+  .msg{min-height:20px;margin-top:12px;text-align:center;font-size:14px}
+  .exercicio{margin-top:14px;padding:14px;border-radius:6px;background:#fff}
+  .exercicio small{color:var(--botao)}
+  .exercicio ul{margin:8px 0;padding-left:20px;font-size:14px}
+  .exercicio .certa{font-weight:bold}
+  .exercicio button{background:#9b1c1c}
+  .voltar{display:block;margin-top:24px;text-align:center;font-size:14px;color:var(--botao)}
+</style>
+</head>
+<body>
+<main class="tela">
+  <h1>Administração</h1>
+
+  <h2>Nova categoria</h2>
+  <div class="linha">
+    <input type="text" id="novaCategoria" placeholder="Ex.: Gramática" aria-label="Nome da nova categoria">
+    <button type="button" class="btn" id="addCategoria">Adicionar</button>
+  </div>
+
+  <h2>Novo exercício</h2>
+  <label for="categoria">Categoria</label>
+  <select id="categoria"></select>
+  <label for="dificuldade">Nível de dificuldade</label>
+  <select id="dificuldade"></select>
+  <label for="enunciado">Enunciado</label>
+  <textarea id="enunciado"></textarea>
+
+  <label>Alternativas (marque a correta; deixe em branco as que não usar)</label>
+  <div class="linha alt"><input type="radio" name="correta" aria-label="Alternativa 1 é a correta"><input type="text" aria-label="Alternativa 1"></div>
+  <div class="linha alt"><input type="radio" name="correta" aria-label="Alternativa 2 é a correta"><input type="text" aria-label="Alternativa 2"></div>
+  <div class="linha alt"><input type="radio" name="correta" aria-label="Alternativa 3 é a correta"><input type="text" aria-label="Alternativa 3"></div>
+  <div class="linha alt"><input type="radio" name="correta" aria-label="Alternativa 4 é a correta"><input type="text" aria-label="Alternativa 4"></div>
+
+  <button type="button" class="btn principal" id="salvar">Salvar exercício</button>
+  <p class="msg" id="msg" role="status"></p>
+
+  <h2>Exercícios cadastrados</h2>
+  <div id="lista"></div>
+
+  <a class="voltar" href="inicio.html">Voltar ao início</a>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id)
+
+  //chama o servidor e já trata erros
+  async function api(url, opcoes){
+    const resposta = await fetch(url, opcoes)
+    const dados = await resposta.json().catch(() => ({}))
+    if (!resposta.ok) throw new Error(dados.error || "Erro ao falar com o servidor.")
+    return dados
+  }
+
+  function post(url, corpo){
+    return api(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(corpo) })
+  }
+
+  function aviso(texto, ok){
+    $('msg').textContent = texto
+    $('msg').style.color = ok ? "#1c6b2f" : "#9b1c1c"
+  }
+
+  async function carregarCategorias(selecionarId){
+    const categorias = await api('/api/categorias')
+    $('categoria').replaceChildren(...categorias.map(c => new Option(c.nome, c.id)))
+    if (selecionarId) $('categoria').value = selecionarId
+  }
+
+  async function carregarNiveis(){
+    const niveis = await api('/api/niveis')
+    $('dificuldade').replaceChildren(...niveis.map(n => new Option(n, n)))
+  }
+
+  async function carregarExercicios(){
+    const exercicios = await api('/api/exercicios')
+    $('lista').replaceChildren(...exercicios.map(e => {
+      const caixa = document.createElement('div')
+      caixa.className = 'exercicio'
+
+      const etiqueta = document.createElement('small')
+      etiqueta.textContent = `${e.categoria?.nome ?? "Sem categoria"} · ${e.dificuldade}`
+
+      const enunciado = document.createElement('p')
+      enunciado.textContent = e.enunciado
+
+      const lista = document.createElement('ul')
+      e.alternativas.forEach((texto, i) => {
+        const item = document.createElement('li')
+        item.textContent = i === e.respostaCorreta ? `${texto} ✓` : texto
+        if (i === e.respostaCorreta) item.className = 'certa'
+        lista.appendChild(item)
+      })
+
+      const apagar = document.createElement('button')
+      apagar.type = 'button'
+      apagar.className = 'btn'
+      apagar.textContent = 'Apagar'
+      apagar.addEventListener('click', async () => {
+        if (!confirm('Apagar este exercício? O progresso dos alunos nele também será apagado.')) return
+        try {
+          await api('/api/admin/exercicios/' + e.id, { method: 'DELETE' })
+          carregarExercicios()
+        } catch (erro) { aviso(erro.message, false) }
+      })
+
+      caixa.append(etiqueta, enunciado, lista, apagar)
+      return caixa
+    }))
+    if (!exercicios.length) $('lista').textContent = "Nenhum exercício cadastrado ainda."
+  }
+
+  $('addCategoria').addEventListener('click', async () => {
+    try {
+      const nova = await post('/api/admin/categorias', { nome: $('novaCategoria').value })
+      $('novaCategoria').value = ""
+      await carregarCategorias(nova.id)
+      aviso("Categoria adicionada.", true)
+    } catch (erro) { aviso(erro.message, false) }
+  })
+
+  $('salvar').addEventListener('click', async () => {
+   
+    const alternativas = []
+    let respostaCorreta = -1
+    document.querySelectorAll('.alt').forEach((linha) => {
+      const texto = linha.querySelector('input[type=text]').value.trim()
+      if (!texto) return
+      if (linha.querySelector('input[type=radio]').checked) respostaCorreta = alternativas.length
+      alternativas.push(texto)
+    })
+
+    try {
+      await post('/api/admin/exercicios', {
+        enunciado: $('enunciado').value,
+        alternativas,
+        respostaCorreta,
+        dificuldade: $('dificuldade').value,
+        categoriaId: Number($('categoria').value),
+      })
+      $('enunciado').value = ""
+      document.querySelectorAll('.alt input').forEach(campo => { campo.value = ""; campo.checked = false })
+      aviso("Exercício salvo!", true)
+      carregarExercicios()
+    } catch (erro) { aviso(erro.message, false) }
+  })
+
+  Promise.all([carregarCategorias(), carregarNiveis(), carregarExercicios()]).catch(erro => aviso(erro.message, false))
+</script>
+</body>
+</html>

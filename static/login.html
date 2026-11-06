@@ -1,219 +1,126 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
 <style>
-    body,html {
-        height: 100%;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #1b1b1b;
-    }
-
-    .container{
-        display: flex;
-        width: 100%;
-        max-width: 800px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 1.0);
-        border-radius: 8px;
-        margin: 20px;
-        overflow: hidden;
-    }
-
-    .logo-section {
-      flex: 1;
-      min-width:350px;
-      background-color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .logo-section img {
-        max-width:80%;
-        max-height: 80%;
-    }
-
-    .login-section {
-        flex: 1;
-        min-width:350px;
-        background-color: #ffde59;
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .login-section h2 {
-        text-align: center;
-        margin-bottom: 25px;
-        color: #004aad;
-    }
-
-    .input-group {
-        margin-bottom: 20px;
-    }
-
-    .input-group label {
-        display: block;
-        margin-bottom: 5px;
-        color: #555;
-    }
-
-    .input-group input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    .login-button {
-        width: 100%;
-        padding: 12px;
-        background-color: black;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-    }
-
-    .login-button:hover {
-        background-color: #5f6546;
-    }
-
-    .links {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .links a {
-        font-weight: bold;
-        color: #004aad;
-        text-decoration: none;
-        font-size: 14px;
-    }
-
-    .links a:hover {
-        text-decoration: underline;
-    }
-
-    .message {
-        margin-top: 15px;
-        text-align: center;
-        font-size: 14px;
-        color: #fff
-    }
-
-    @media (max-width: 768px) {
-        .container{
-            flex-direction: column;
-            width: 90%;
-            height: auto;
-        }
-
-        .logo-section, .login-section {
-            flex: none;
-            width: 100%;
-        }
-
-        .logo-section {
-            padding: 30px 20px;
-            min-height: 200px;
-        }
-
-        .login-section {
-            padding: 30px;
-        }
-
-    }   
-
+  :root{--fundo:#c3dde3;--barra:#55b4d8;--botao:#4a7fc1;--texto:#1d2b4a}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;background:#9fc2cc;font-family:'Libre Baskerville',Georgia,serif;color:var(--texto);display:flex;justify-content:center}
+  .tela{width:100%;max-width:420px;min-height:100vh;background:var(--fundo);padding:32px 28px;display:flex;flex-direction:column;justify-content:center}
+  .topo{position:relative;padding:48px 0;margin-bottom:12px}
+  .topo svg{position:absolute;left:50%;top:50%;width:230px;transform:translate(-50%,-50%);opacity:.55}
+  h1{position:relative;margin:0;font-style:italic;font-weight:400;letter-spacing:.2em;text-transform:uppercase;text-align:center;font-size:24px;line-height:1.5}
+  p{text-align:center;font-size:14px;line-height:1.6}
+  label{display:block;margin:18px 0 6px;font-size:17px}
+  input{width:100%;height:32px;border:0;border-radius:4px;background:var(--barra);padding:0 10px;font:inherit;color:var(--texto)}
+  input:focus-visible,.btn:focus-visible,a:focus-visible{outline:3px solid var(--texto)}
+  .btn{display:block;width:fit-content;margin:28px auto 0;padding:10px 26px;border:0;border-radius:4px;background:var(--botao);color:#fff;font:inherit;font-size:15px;letter-spacing:.1em;text-decoration:none;cursor:pointer}
+  .btn:hover{background:#3b69a3}
+  a{color:var(--botao)}
+  .msg{min-height:20px;margin-top:14px}
 </style>
-
+</head>
 <body>
-    <div class="container">
-    <div class="logo-section">
-      <img src="images/logo.png" alt="EnglishForAll">
+<main class="tela">
+
+
+  <section id="boasVindas">
+    <div class="topo">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#4a7fc1" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><ellipse cx="100" cy="100" rx="40" ry="90"/><ellipse cx="100" cy="100" rx="75" ry="90"/><path d="M10 100h180M22 60h156M22 140h156"/></g></svg>
+      <h1>English<br>for all</h1>
     </div>
-    <div class="login-section">
-      <h2>Login</h2>
-      <form id="loginForm">
-        <div class="input-group">
-          <label for="username">Usuário:</label>
-          <input type="text" id="username" name="username" required>
-        </div>
-        <div class="input-group">
-          <label for="password">Senha:</label>
-          <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit" class="login-button">Entrar</button>
-        <div class="links">
-          <a href="#">Esqueceu a senha?</a> | <a href="cadastro.html">Criar conta</a>
-        </div>
-        <p class="message" id="msg"></p>
-      </form>
+    <p>Sua plataforma gratuita e sem anúncios de estudo de inglês.</p>
+    <p>Come learn with us!!</p>
+    <a class="btn" href="cadastro.html">CRIE SUA CONTA</a>
+    <p>Já tem uma conta? <a href="#entrar">Login</a></p>
+  </section>
+
+ 
+  <section id="telaLogin" hidden>
+    <div class="topo">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#4a7fc1" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><ellipse cx="100" cy="100" rx="40" ry="90"/><ellipse cx="100" cy="100" rx="75" ry="90"/><path d="M10 100h180M22 60h156M22 140h156"/></g></svg>
+      <h1>Login</h1>
     </div>
-  </div>
+    <form id="loginForm">
+      <label for="username">Usuário:</label>
+      <input type="text" id="username" name="username" required>
+      <label for="password">Senha:</label>
+      <input type="password" id="password" name="password" required>
+      <button type="submit" class="btn">Entrar</button>
+      <p class="msg" id="msg" role="status"></p>
+      <p><a href="#">Esqueceu a senha?</a> | <a href="cadastro.html">Criar conta</a></p>
+      <p><a href="#" id="voltar">Voltar</a></p>
+    </form>
+  </section>
 
-  <script>
-    //obtendo informações do formulário de login
-    const form = document.getElementById('loginForm')
-    const msg = document.getElementById('msg')
+</main>
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+<script>
+  const boasVindas = document.getElementById('boasVindas')
+  const telaLogin = document.getElementById('telaLogin')
 
-        //criando variáveis para verificação
-        const username = form.username.value;
-        const password = form.password.value;
 
-        try {
-            //envia os dados para a função /login no servidor
-            const response = await fetch('/login',  {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password})
-            });
+  function atualizarTela(){
+    const entrar = location.hash === '#entrar'
+    boasVindas.hidden = entrar
+    telaLogin.hidden = !entrar
+  }
+  window.addEventListener('hashchange', atualizarTela)
+  atualizarTela()
 
-            const data = await response.json();
+  document.getElementById('voltar').addEventListener('click', (e) => {
+    e.preventDefault()
+    history.pushState(null, '', location.pathname)
+    atualizarTela()
+  })
 
-            //mensagem de sucesso e redirecionamento para login
-            if (response.ok) {
-                msg.textContent = "Login Realizado com sucesso.";
-                msg.style.color = "green";
+ 
+  const form = document.getElementById('loginForm')
+  const msg = document.getElementById('msg')
 
-                //verifica se o questionário já foi respondido e direciona o usuário
-                setTimeout(() => {
-                    if (data.questRespondido){
-                        window.location.href = "/inicio.html"
-                    }else{
-                        window.location.href = "/questionario.html"
-                     }
-                },1000);
-            
-        //mensagens de erro
-            }else {
-                msg.textContent = (data.error) || "Credenciais inválidas."
-                msg.style.color = "red";
-            }
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        }catch (err) {
-            msg.textContent = "Erro de conexão com o servidor."
-            msg.style.color = "red";
-        }
-    });
+    const username = form.username.value;
+    const password = form.password.value;
 
-  </script>
+    try {
+   
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ username, password })
+      });
 
+      const data = await response.json();
+
+      if (response.ok) {
+        msg.textContent = "Login realizado com sucesso.";
+        msg.style.color = "#1c6b2f";
+
+     
+        setTimeout(() => {
+          if (data.questRespondido){
+            window.location.href = "/inicio.html"
+          } else {
+            window.location.href = "/questionario.html"
+          }
+        }, 1000);
+
+      } else {
+        msg.textContent = data.error || "Credenciais inválidas."
+        msg.style.color = "#9b1c1c";
+      }
+
+    } catch (err) {
+      msg.textContent = "Erro de conexão com o servidor."
+      msg.style.color = "#9b1c1c";
+    }
+  });
+</script>
 </body>
 </html>
