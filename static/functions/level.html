@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Level | English For All</title>
+    <style>
+      :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #9fc2cc;
+        font-family: "Libre Baskerville", Georgia, serif;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+      }
+
+      .tela {
+        width: 100%;
+        max-width: 620px;
+        min-height: 100vh;
+        background: var(--fundo);
+        padding: 32px 28px;
+      }
+
+      h1 {
+        margin: 0 0 24px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 22px;
+      }
+      h2 {
+        margin: 28px 0 12px;
+        font-size: 17px;
+      }
+
+      .msg,
+      .vazio {
+        margin-top: 24px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .aluno {
+        background: #fff;
+        padding: 16px;
+        border-radius: 6px;
+        margin-bottom: 18px;
+      }
+      .aluno p {
+        margin: 0 0 7px;
+        font-size: 15px;
+      }
+      .aluno span {
+        font-size: 13px;
+      }
+
+      .nivel-atual {
+        background: var(--botao);
+        color: #fff;
+        padding: 22px;
+        border-radius: 6px;
+      }
+      .etiqueta {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+      }
+      .nivel-atual h2 {
+        margin: 12px 0;
+        font-size: 25px;
+      }
+      .nivel-atual p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .informacoes {
+        margin-top: 25px;
+      }
+      .informacoes h2 {
+        margin-top: 0;
+      }
+      .informacoes p {
+        background: #fff;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .progresso {
+        margin-top: 25px;
+      }
+
+      .progresso h2 {
+        margin-top: 0;
+      }
+
+      .resumo {
+        display: flex;
+        gap: 12px;
+      }
+
+      .card-progresso {
+        flex: 1;
+        background: #fff;
+        padding: 18px 12px;
+        border-radius: 6px;
+        text-align: center;
+      }
+
+      .card-progresso strong {
+        display: block;
+        font-size: 25px;
+        color: var(--botao);
+        margin-bottom: 7px;
+      }
+
+      .card-progresso span {
+        font-size: 12px;
+      }
+
+      .secao-niveis > p {
+        font-size: 13px;
+        margin-bottom: 15px;
+      }
+
+      .item-nivel {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #fff;
+        padding: 15px;
+        margin-top: 12px;
+        border-radius: 6px;
+        border: 2px solid transparent;
+      }
+      .item-nivel.atual {
+        border-color: var(--botao);
+        background: #eaf5f8;
+      }
+
+      .numero {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--barra);
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      .detalhes {
+        flex: 1;
+      }
+      .detalhes h3 {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+      .detalhes p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .status {
+        font-size: 11px;
+        color: var(--botao);
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .voltar {
+        display: block;
+        margin-top: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--botao);
+      }
+      .voltar:focus-visible {
+        outline: 3px solid var(--texto);
+      }
+
+      @media (max-width: 380px) {
+        .resumo {
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .tela {
+          padding: 25px 18px;
+        }
+        .item-nivel {
+          gap: 10px;
+          padding: 12px;
+        }
+        .status {
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="tela">
+      <h1>Meu nível</h1>
+      <p class="msg" id="msg" role="status">Carregando suas informações...</p>
+      <section id="conteudo" hidden>
+        <div class="aluno">
+          <p>Olá, <strong id="nome-aluno"></strong>!</p>
+          <span>Acompanhe seu desenvolvimento no inglês.</span>
+        </div>
+
+        <section class="nivel-atual">
+          <span class="etiqueta">SEU NÍVEL ATUAL</span>
+          <h2 id="nivel-atual"></h2>
+          <p id="descricao-nivel"></p>
+        </section>
+
+        <section class="informacoes">
+          <h2>Minha rotina de estudos</h2>
+          <p id="dias-estudo"></p>
+        </section>
+
+        <section class="progresso">
+          <h2>Meu progresso</h2>
+          <div class="resumo">
+            <div class="card-progresso">
+              <strong id="total-respondidos">0</strong>
+              <span>Exercícios respondidos</span>
+            </div>
+            <div class="card-progresso">
+              <strong id="total-acertos">0</strong>
+              <span>Respostas corretas</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="secao-niveis">
+          <h2>Níveis de aprendizagem</h2>
+          <p>Conheça os níveis disponíveis na plataforma.</p>
+
+          <div id="lista-niveis"></div>
+        </section>
+
+        <a class="voltar" href="/inicio.html">Voltar ao início</a>
+      </section>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+
+      // Descrições dos níveis disponíveis
+      const descricoes = {
+        Nulo: "Você está começando sua jornada de aprendizagem do inglês.",
+        Iniciante:
+          "Você está desenvolvendo seus primeiros conhecimentos de inglês.",
+        Intermediário:
+          "Você já possui conhecimentos e está ampliando suas habilidades.",
+        Avançado: "Você possui conhecimentos mais amplos da língua inglesa.",
+      };
+
+      // Carrega os dados do aluno e os níveis do servidor
+      async function carregarNivel() {
+        try {
+          const [respostaAluno, respostaNiveis] = await Promise.all([
+            fetch("/api/meu-nivel"),
+            fetch("/api/niveis"),
+          ]);
+          // Se a sessão não estiver ativa, volta para o login
+          if (respostaAluno.status === 401 || respostaNiveis.status === 401) {
+            window.location.href = "/login.html#entrar";
+            return;
+          }
+
+          const aluno = await respostaAluno.json();
+          const niveis = await respostaNiveis.json();
+
+          if (!respostaAluno.ok) {
+            throw new Error(
+              aluno.error || "Não foi possível carregar seus dados.",
+            );
+          }
+          if (!respostaNiveis.ok) {
+            throw new Error(
+              niveis.error || "Não foi possível carregar os níveis.",
+            );
+          }
+
+          mostrarAluno(aluno);
+          mostrarNiveis(niveis, aluno.nivel);
+          $("msg").textContent = "";
+          $("conteudo").hidden = false;
+        } catch (erro) {
+          $("msg").textContent = erro.message;
+          $("msg").style.color = "#9b1c1c";
+        }
+      }
+
+      // Mostra as informações do aluno
+      function mostrarAluno(aluno) {
+        $("nome-aluno").textContent = aluno.nome;
+
+        if (aluno.questRespondido && aluno.nivel) {
+          $("nivel-atual").textContent = aluno.nivel;
+          $("descricao-nivel").textContent =
+            descricoes[aluno.nivel] ||
+            "Continue estudando para desenvolver seu inglês.";
+        } else {
+          $("nivel-atual").textContent = "Não definido";
+
+          $("descricao-nivel").textContent =
+            "Responda ao questionário para descobrir seu nível de inglês.";
+        }
+        if (aluno.dias) {
+          $("dias-estudo").textContent = aluno.dias;
+        } else {
+          $("dias-estudo").textContent =
+            "Você ainda não informou seus dias de estudo.";
+        }
+        $("total-respondidos").textContent = aluno.totalRespondidos ?? 0;
+        $("total-acertos").textContent = aluno.totalAcertos ?? 0;
+      }
+
+      // Mostra os níveis disponíveis
+      function mostrarNiveis(niveis, nivelAtual) {
+        const lista = $("lista-niveis");
+
+        lista.replaceChildren();
+
+        niveis.forEach((nivel, indice) => {
+          const item = document.createElement("div");
+          item.className = "item-nivel";
+
+          const numero = document.createElement("div");
+          numero.className = "numero";
+          numero.textContent = String(indice + 1).padStart(2, "0");
+          const detalhes = document.createElement("div");
+          detalhes.className = "detalhes";
+
+          const titulo = document.createElement("h3");
+          titulo.textContent = nivel;
+
+          const descricao = document.createElement("p");
+          descricao.textContent =
+            descricoes[nivel] || "Conteúdos para desenvolver seu inglês.";
+
+          const status = document.createElement("span");
+          status.className = "status";
+
+          if (nivel === nivelAtual) {
+            item.classList.add("atual");
+            status.textContent = "Seu nível atual";
+          } else {
+            status.textContent = "Nível disponível";
+          }
+
+          detalhes.append(titulo, descricao);
+          item.append(numero, detalhes, status);
+          lista.appendChild(item);
+        });
+      }
+      carregarNivel();
+    </script>
+  </body>
+</html>
