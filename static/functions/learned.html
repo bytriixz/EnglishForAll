@@ -144,7 +144,6 @@
   </head>
   <body>
     <div class="container">
-      <!-- Menu Lateral Estilizado -->
       <nav class="sidebar">
         <div class="sidebar-header">
           <span>▼</span>
@@ -157,18 +156,56 @@
         </ul>
       </nav>
 
-      <!-- Conteúdo Principal baseado na imagem -->
       <main class="content-section">
         <h1>Learned<br>words</h1>
         
-        <div class="word-list">
-          <div class="word-item">I - Eu</div>
-          <div class="word-item">You - Você</div>
-          <div class="word-item">He - Ele</div>
-          <div class="word-item">She - Ela</div>
-          <div class="word-item">They - Eles / elas</div>
+        <div class="word-list" id="listaAprendidos">
+          <p class="vazio">Carregando conteúdos aprendidos...</p>
         </div>
       </main>
     </div>
+
+    <script>
+      async function carregarPalavrasAprendidas() {
+        const contenedor = document.getElementById('listaAprendidos');
+        try {
+          const resposta = await fetch('/api/aprendidos');
+          if (resposta.status === 401) {
+            window.location.href = '/login.html#entrar';
+            return;
+          }
+          if (!resposta.ok) throw new Error("Erro ao buscar dados.");
+          
+          const dados = await resposta.json();
+          
+          if (dados.length === 0) {
+            contenedor.innerHTML = '<p class="vazio">Você ainda não completou nenhum exercício corretamente.</p>';
+            return;
+          }
+
+          contenedor.innerHTML = '';
+          dados.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'word-item';
+
+            const categoria = document.createElement('small');
+            categoria.textContent = item.categoria;
+
+            const respostaCorreta = item.alternativas ? item.alternativas[item.respostaCorreta] : '';
+            const texto = document.createElement('p');
+            texto.innerHTML = `${item.enunciado} ${respostaCorreta ? '— <strong>' + respostaCorreta + '</strong>' : ''}`;
+
+            div.append(categoria, texto);
+            contenedor.appendChild(div);
+          });
+
+        } catch (erro) {
+          console.error(erro);
+          contenedor.innerHTML = '<p class="vazio">Erro ao carregar os itens aprendidos.</p>';
+        }
+      }
+
+      carregarPalavrasAprendidas();
+    </script>
   </body>
 </html>

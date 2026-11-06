@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Learn</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
+    <style>
+      :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: 'Libre Baskerville', Georgia, Serif;
+        background-color: #9fc2cc;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .container {
+        display: flex;
+        width: 100%;
+        max-width: 850px;
+        min-height: 480px;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Menu Lateral */
+      .sidebar {
+        width: 30%;
+        background-color: var(--botao);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-header {
+        background-color: var(--barra);
+        padding: 15px;
+        text-align: center;
+      }
+
+      .sidebar-header span {
+        font-size: 20px;
+        color: white;
+      }
+
+      .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+      }
+
+      .sidebar-menu li a {
+        display: block;
+        padding: 18px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 400;
+        transition: background 0.2s;
+      }
+
+      .sidebar-menu li a:hover,
+      .sidebar-menu li a.ativo {
+        background-color: #3b689e;
+      }
+
+      /* Seção de Conteúdo */
+      .content-section {
+        width: 70%;
+        background-color: var(--fundo);
+        padding: 35px 30px;
+        color: var(--texto);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .content-section h1 {
+        text-align: center;
+        font-size: 20px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+
+      .card-exercicio {
+        background: #fff;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+      }
+
+      .meta-info {
+        font-size: 12px;
+        color: var(--botao);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .enunciado {
+        font-size: 16px;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      .alternativas {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .alternativa-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #f0f7f9;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+
+      .alternativa-label:hover {
+        background: #e1edf2;
+      }
+
+      .alternativa-label input {
+        accent-color: var(--botao);
+        width: 16px;
+        height: 16px;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--botao);
+        color: #fff;
+        font: inherit;
+        font-size: 15px;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .btn:hover {
+        background: #3b69a3;
+      }
+
+      .msg {
+        text-align: center;
+        font-size: 14px;
+        min-height: 20px;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .navegacao-exercicios {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .vazio {
+        text-align: center;
+        font-size: 15px;
+        color: #4a5a7c;
+        margin-top: 50px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+        }
+        .sidebar-menu {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+        .sidebar-menu li a {
+          padding: 12px 10px;
+          font-size: 13px;
+        }
+        .content-section {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <span>▼</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li><a href="learned.html">Learned</a></li>
+          <li><a href="tolearn.html" class="ativo">To learn</a></li>
+          <li><a href="calendar.html">Calendar</a></li>
+          <li><a href="level.html">Level</a></li>
+        </ul>
+      </nav>
+
+      <main class="content-section">
+        <div>
+          <h1>To Learn</h1>
+          <div id="areaExercicio">
+            <p class="vazio">Carregando exercícios...</p>
+          </div>
+          <p class="msg" id="msg" role="status"></p>
+        </div>
+
+        <div class="navegacao-exercicios" id="controlesNavegacao" style="display: none;">
+          <button type="button" class="btn" id="btnAnterior" style="width: 48%;">Anterior</button>
+          <button type="button" class="btn" id="btnProximo" style="width: 48%;">Próximo</button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      let exercicios = [];
+      let indiceAtual = 0;
+
+      async function carregarExercicios() {
+        const area = document.getElementById('areaExercicio');
+        try {
+          const resposta = await fetch('/api/tolearn');
+          if (resposta.status === 401) {
+            window.location.href = '/login.html#entrar';
+            return;
+          }
+          if (!resposta.ok) throw new Error("Erro ao buscar exercícios.");
+          
+          exercicios = await resposta.json();
+
+          if (exercicios.length === 0) {
+            area.innerHTML = '<p class="vazio">Nenhum exercício cadastrado no momento. Peça ao administrador para adicionar novos itens!</p>';
+            return;
+          }
+
+          exibirExercicio(indiceAtual);
+        } catch (erro) {
+          console.error(erro);
+          area.innerHTML = '<p class="vazio">Erro ao carregar os exercícios.</p>';
+        }
+      }
+
+      function exibirExercicio(indice) {
+        const area = document.getElementById('areaExercicio');
+        const controles = document.getElementById('controlesNavegacao');
+        const msg = document.getElementById('msg');
+        msg.textContent = "";
+
+        if (exercicios.length === 0) return;
+
+        const e = exercicios[indice];
+        controles.style.display = exercicios.length > 1 ? 'flex' : 'none';
+
+        document.getElementById('btnAnterior').disabled = indice === 0;
+        document.getElementById('btnProximo').disabled = indice === exercicios.length - 1;
+
+        area.innerHTML = `
+          <div class="card-exercicio">
+            <span class="meta-info">${e.categoria?.nome || 'Geral'} · ${e.dificuldade} (Exercício ${indice + 1} de ${exercicios.length})</span>
+            <p class="enunciado">${e.enunciado}</p>
+            <div class="alternativas" id="listaAlternativas"></div>
+            <button type="button" class="btn" id="enviarResposta">Enviar Resposta</button>
+          </div>
+        `;
+
+        const containerAlt = document.getElementById('listaAlternativas');
+        e.alternativas.forEach((alt, i) => {
+          const label = document.createElement('label');
+          label.className = 'alternativa-label';
+          
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'resposta';
+          radio.value = i;
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(alt));
+          containerAlt.appendChild(label);
+        });
+
+        document.getElementById('enviarResposta').addEventListener('click', () => responderExercicio(e.id));
+      }
+
+      async function responderExercicio(exercicioId) {
+        const selecionado = document.querySelector('input[name="resposta"]:checked');
+        const msg = document.getElementById('msg');
+
+        if (!selecionado) {
+          msg.textContent = "Selecione uma alternativa antes de enviar.";
+          msg.style.color = "#9b1c1c";
+          return;
+        }
+
+        const respostaIndex = Number(selecionado.value);
+
+        try {
+          const res = await fetch(`/api/exercicios/${exercicioId}/responder`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resposta: respostaIndex })
+          });
+
+          const resultado = await res.json();
+          if (!res.ok) throw new Error(resultado.error || "Erro ao enviar resposta.");
+
+          if (resultado.correto) {
+            msg.textContent = "Resposta correta! Adicionada aos seus aprendidos.";
+            msg.style.color = "#1c6b2f";
+          } else {
+            msg.textContent = "Resposta incorreta. Tente novamente ou avance para o próximo!";
+            msg.style.color = "#9b1c1c";
+          }
+        } catch (erro) {
+          msg.textContent = erro.message;
+          msg.style.color = "#9b1c1c";
+        }
+      }
+
+      document.getElementById('btnAnterior').addEventListener('click', () => {
+        if (indiceAtual > 0) {
+          indiceAtual--;
+          exibirExercicio(indiceAtual);
+        }
+      });
+
+      document.getElementById('btnProximo').addEventListener('click', () => {
+        if (indiceAtual < exercicios.length - 1) {
+          indiceAtual++;
+          exibirExercicio(indiceAtual);
+        }
+      });
+
+      carregarExercicios();
+    </script>
+  </body>
+</html>
