@@ -202,6 +202,8 @@
     }
 
     const nivel = nivelEscolhido.textContent.trim();
+    localStorage.setItem("diasEstudo", JSON.stringify(diasEscolhidos));
+    localStorage.setItem("nivelEstudo", nivel);
 
     try{
       const response = await fetch('/salvar-questionario',{
