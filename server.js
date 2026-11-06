@@ -493,6 +493,20 @@ app.get("/api/tolearn", exigirLogin, rota(async (req, res) => {
   }));
 }));
 
+
+//-------LOGOUT DO USUÁRIO-------
+
+app.post("/logout", (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
+      console.error("Erro ao encerrar sessão:", error);
+      return res.status(500).json({ error: "Erro interno ao sair." });
+    }
+    res.clearCookie("connect.sid"); 
+    res.status(200).json({ message: "Sessão encerrada com sucesso." });
+  });
+});
+
 //-------INICIALIZAÇÃO-------
 
 app.listen(PORT, () => {

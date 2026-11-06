@@ -343,6 +343,8 @@
 
         lista.replaceChildren();
 
+        const indiceAtual = niveis.indexOf(nivelAtual);
+
         niveis.forEach((nivel, indice) => {
           const item = document.createElement("div");
           item.className = "item-nivel";
