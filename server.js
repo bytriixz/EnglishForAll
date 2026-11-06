@@ -395,7 +395,85 @@ app.get("/api/progresso", exigirLogin, rota(async (req, res) => {
 }));
 
 
+// Retorna os dados do perfil/questionário do usuário logado (dias e nível)
+app.get("/api/usuario-dados", exigirLogin, async (req, res) => {
+  try {
+    const usuario = await Usuario.findByPk(req.session.user.id);
+    if (!usuario) return res.status(404).json({ error: "Usuário não encontrado." });
 
+    res.json({
+      nivel: usuario.nivel || "Iniciante",
+      datas: usuario.datas ? usuario.datas.split(", ") : []
+    });
+  } catch (error) {
+    console.error("Erro ao buscar dados do usuário:", error);
+    res.status(500).json({ error: "Erro interno." });
+  }
+});
+
+// Retorna os exercícios que o aluno respondeu CORRETAMENTE (Learned)
+app.get("/api/aprendidos", exigirLogin, rota(async (req, res) => {
+  const progresosCertos = await Progresso.findAll({
+    where: { 
+      usuarioId: req.session.user.id,
+      correto: true 
+    },
+    include: { 
+      model: Exercicio, 
+      as: 'exercicio', 
+      include: { model: Categoria, as: 'categoria' } 
+    },
+    order: [['createdAt', 'DESC']]
+  });
+
+  const aprendidos = progresosCertos.map(p => ({
+    id: p.id,
+    enunciado: p.exercicio?.enunciado,
+    alternativas: p.exercicio?.alternativas,
+    respostaCorreta: p.exercicio?.respostaCorreta,
+    categoria: p.exercicio?.categoria?.nome || 'Geral'
+  }));
+
+  res.json(aprendidos);
+}));
+
+// Retorna o histórico completo com filtros (para a página historico.html)
+app.get("/api/historico", exigirLogin, rota(async (req, res) => {
+  const { categoriaId, dificuldade, resultado } = req.query;
+
+  const whereProgresso = { usuarioId: req.session.user.id };
+  if (resultado === 'acertos') whereProgresso.correto = true;
+  if (resultado === 'erros') whereProgresso.correto = false;
+
+  const whereExercicio = {};
+  if (dificuldade) whereExercicio.dificuldade = dificuldade;
+  if (categoriaId) whereExercicio.categoriaId = categoriaId;
+
+  const registros = await Progresso.findAll({
+    where: whereProgresso,
+    include: {
+      model: Exercicio,
+      as: 'exercicio',
+      where: Object.keys(whereExercicio).length ? whereExercicio : undefined,
+      include: { model: Categoria, as: 'categoria' }
+    },
+    order: [['createdAt', 'DESC']]
+  });
+
+  const historicoFormatado = registros.map(p => ({
+    id: p.id,
+    correto: p.correto,
+    resposta: p.resposta,
+    data: p.createdAt,
+    enunciado: p.exercicio?.enunciado,
+    alternativas: p.exercicio?.alternativas,
+    respostaCorreta: p.exercicio?.respostaCorreta,
+    dificuldade: p.exercicio?.dificuldade,
+    categoria: p.exercicio?.categoria?.nome || 'Geral'
+  }));
+
+  res.json(historicoFormatado);
+}));
 
 
 //-------INICIALIZAÇÃO-------

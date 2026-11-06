@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learned Words</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
+    <style>
+      :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: 'Libre Baskerville', Georgia, Serif;
+        background-color: #9fc2cc;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .container {
+        display: flex;
+        width: 100%;
+        max-width: 850px;
+        min-height: 480px;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Menu Lateral */
+      .sidebar {
+        width: 30%;
+        background-color: var(--botao);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-header {
+        background-color: var(--barra);
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .sidebar-header span {
+        font-size: 20px;
+        color: white;
+      }
+
+      .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+      }
+
+      .sidebar-menu li a {
+        display: block;
+        padding: 18px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 400;
+        transition: background 0.2s;
+      }
+
+      .sidebar-menu li a:hover,
+      .sidebar-menu li a.ativo {
+        background-color: #3b689e;
+      }
+
+      /* Seção de Conteúdo */
+      .content-section {
+        width: 70%;
+        background-color: var(--fundo);
+        padding: 35px 30px;
+        color: var(--texto);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .content-section h1 {
+        text-align: center;
+        font-size: 20px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        line-height: 1.4;
+      }
+
+      .word-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .word-item {
+        padding: 14px 10px;
+        font-size: 16px;
+        border-bottom: 1.5px solid #a8c8d2;
+      }
+
+      .word-item:last-child {
+        border-bottom: none;
+      }
+
+      /* Responsividade para telas menores */
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+        }
+        .sidebar-menu {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+        .sidebar-menu li a {
+          padding: 12px 10px;
+          font-size: 13px;
+        }
+        .content-section {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Menu Lateral Estilizado -->
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <span>▼</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li><a href="learned.html" class="ativo">Learned</a></li>
+          <li><a href="tolearn.html">To learn</a></li>
+          <li><a href="calendar.html">Calendar</a></li>
+          <li><a href="level.html">Level</a></li>
+        </ul>
+      </nav>
+
+      <!-- Conteúdo Principal baseado na imagem -->
+      <main class="content-section">
+        <h1>Learned<br>words</h1>
+        
+        <div class="word-list">
+          <div class="word-item">I - Eu</div>
+          <div class="word-item">You - Você</div>
+          <div class="word-item">He - Ele</div>
+          <div class="word-item">She - Ela</div>
+          <div class="word-item">They - Eles / elas</div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
