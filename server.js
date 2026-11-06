@@ -195,6 +195,32 @@ app.get("/api/me", exigirLogin, (req, res) => {
   res.json(req.session.user);
 });
 
+  app.get("/api/meu-nivel", exigirLogin, rota(async (req, res) => {
+    const usuario = await Usuario.findByPk(req.session.user.id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
+    }
+    const totalRespondidos = await Progresso.count({
+      where: { usuarioId: usuario.id }
+    });
+
+    const totalAcertos = await Progresso.count({
+      where: {
+        usuarioId: usuario.id,
+        correto: true
+      }
+    });
+    res.json({
+      nome: usuario.fullname,
+      nivel: usuario.nivel,
+      dias: usuario.datas,
+      questRespondido: usuario.questRespondido,
+      totalRespondidos,
+      totalAcertos
+    });
+  }));
+
+
 
 //-------QUESTIONÁRIO-------
 
@@ -367,8 +393,6 @@ app.get("/api/progresso", exigirLogin, rota(async (req, res) => {
 
   res.json({ total, porCategoria, porDificuldade });
 }));
-
-
 
 
 
