@@ -6,21 +6,107 @@
 <title>Página de Cadastro</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
 <style>
-  :root{--fundo:#c3dde3;--barra:#55b4d8;--botao:#4a7fc1;--texto:#1d2b4a}
-  *{box-sizing:border-box}
-  [hidden]{display:none!important}
-  body{margin:0;background:#9fc2cc;font-family:'Libre Baskerville',Georgia,serif;color:var(--texto);display:flex;justify-content:center}
+    :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+    }
 
-  .tela{width:100%;max-width:420px;min-height:100vh;padding:40px 28px}
-  h1{margin:0 0 56px;font-style:italic;font-weight:400;letter-spacing:.2em;text-transform:uppercase;text-align:center;font-size:24px;line-height:1.5}
-  label{display:block;margin:20px 0 6px;font-size:17px}
-  input{width:100%;height:32px;border:0;border-radius:4px;background:var(--barra);padding:0 10px;font:inherit;color:var(--texto)}
-  input:focus-visible,.btn:focus-visible,a:focus-visible{outline:3px solid var(--texto)}
-  .btn{display:block;margin:36px auto 0;padding:10px 26px;border:0;border-radius:4px;background:var(--botao);color:#fff;font:inherit;font-size:17px;cursor:pointer}
-  .btn:hover{background:#3b69a3}
-  .msg{min-height:20px;margin-top:14px;text-align:center;font-size:14px}
-  .links{margin-top:20px;text-align:center;font-size:14px}
-  a{color:var(--botao)}
+    * {
+        box-sizing: border-box;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+        background: #9fc2cc;
+        font-family: 'Libre Baskerville', Georgia, serif;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+    }
+
+    /* O mapa-múndi vem do arquivo images/mapa.png (recorte do protótipo). Sem ele, o fundo fica liso. */
+
+    .tela {
+        width: 100%;
+        max-width: 420px;
+        min-height: 100vh;
+        background: var(--fundo) url(images/mapa.png) no-repeat top center/100% auto;
+        padding: 40px 28px;
+    }
+
+    h1 {
+        margin: 0 0 56px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 24px;
+        line-height: 1.5;
+    }
+
+    label {
+        display: block;
+        margin: 20px 0 6px;
+        font-size: 17px;
+    }
+
+    input {
+        width: 100%;
+        height: 32px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--barra);
+        padding: 0 10px;
+        font: inherit;
+        color: var(--texto);
+    }
+
+    input:focus-visible,
+    .btn:focus-visible,
+    a:focus-visible {
+        outline: 3px solid var(--texto);
+    }
+
+    .btn {
+        display: block;
+        margin: 36px auto 0;
+        padding: 10px 26px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--botao);
+        color: #fff;
+        font: inherit;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background: #3b69a3;
+    }
+
+    .msg {
+        min-height: 20px;
+        margin-top: 14px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .links {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--botao);
+    }
 </style>
 </head>
 <body>
@@ -29,7 +115,7 @@
 
   <form id="cadastroForm" novalidate>
 
-   
+    <!-- Passo 1 (protótipo, imagem 2) -->
     <div id="passo1">
       <label for="fullname">Nome</label>
       <input type="text" id="fullname" name="fullname" required>
@@ -41,7 +127,7 @@
       <p class="links"><a href="login.html#entrar">Já tem uma conta? Entrar</a></p>
     </div>
 
- 
+    <!-- Passo 2 (protótipo, imagem 3) -->
     <div id="passo2" hidden>
       <label for="username">Usuário</label>
       <input type="text" id="username" name="username" required>
@@ -63,7 +149,7 @@
   const passo1 = document.getElementById('passo1')
   const passo2 = document.getElementById('passo2')
 
-
+  //verifica se os campos de um passo estão preenchidos corretamente
   function passoValido(passo){
     return Array.from(passo.querySelectorAll('input')).every(campo => campo.reportValidity())
   }
@@ -82,7 +168,7 @@
     passo1.hidden = false
   })
 
- 
+  //função chamada após envio do formulário
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!passoValido(passo2)) return;
@@ -101,7 +187,7 @@
     }
 
     try {
-    
+      //envia os dados para a função /cadastrarUser no servidor
       const response = await fetch('/cadastrarUser', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

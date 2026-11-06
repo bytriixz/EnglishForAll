@@ -369,6 +369,11 @@ app.get("/api/progresso", exigirLogin, rota(async (req, res) => {
 }));
 
 
+
+
+
+
+
 //-------INICIALIZAÇÃO-------
 
 app.listen(PORT, () => {

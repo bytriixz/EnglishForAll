@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercícios anteriores</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
+<style>
+    :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #9fc2cc;
+        font-family: 'Libre Baskerville', Georgia, serif;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+    }
+
+    .tela {
+        width: 100%;
+        max-width: 620px;
+        min-height: 100vh;
+        background: var(--fundo);
+        padding: 32px 28px;
+    }
+
+    h1 {
+        margin: 0 0 24px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 22px;
+        line-height: 1.5;
+    }
+
+    .filtros {
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+        gap: 10px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+    }
+
+    select {
+        width: 100%;
+        border: 0;
+        border-radius: 4px;
+        background: var(--barra);
+        padding: 8px;
+        font: inherit;
+        font-size: 14px;
+        color: var(--texto);
+    }
+
+    select:focus-visible,
+    a:focus-visible {
+        outline: 3px solid var(--texto);
+    }
+
+    .item {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 6px;
+        background: #fff;
+    }
+
+    .meta {
+        font-size: 12px;
+        color: var(--botao);
+    }
+
+    .item p {
+        margin: 8px 0;
+    }
+
+    .item ul {
+        margin: 8px 0 0;
+        padding-left: 20px;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .resultado {
+        display: inline-block;
+        margin-right: 8px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .acertou {
+        background: #1c6b2f;
+    }
+
+    .errou {
+        background: #9b1c1c;
+    }
+
+    .certa {
+        font-weight: bold;
+    }
+
+    .vazio,
+    .msg {
+        margin-top: 24px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .voltar {
+        display: block;
+        margin-top: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--botao);
+    }
+</style>
+</head>
+<body>
+<main class="tela">
+  <h1>Exercícios<br>anteriores</h1>
+
+  <div class="filtros">
+    <div><label for="fCategoria">Categoria</label><select id="fCategoria"></select></div>
+    <div><label for="fDificuldade">Dificuldade</label><select id="fDificuldade"></select></div>
+    <div>
+      <label for="fResultado">Resultado</label>
+      <select id="fResultado">
+        <option value="">Todos</option>
+        <option value="acertos">Só acertos</option>
+        <option value="erros">Só erros</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="msg" id="msg" role="status"></p>
+  <div id="lista"></div>
+
+  <a class="voltar" href="inicio.html">Voltar ao início</a>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id)
+
+  //chama o servidor; se a sessão acabou, volta para o login
+  async function api(url){
+    const resposta = await fetch(url)
+    if (resposta.status === 401) { window.location.href = '/login.html#entrar'; return [] }
+    const dados = await resposta.json().catch(() => ({}))
+    if (!resposta.ok) throw new Error(dados.error || "Erro ao falar com o servidor.")
+    return dados
+  }
+
+  async function carregarFiltros(){
+    const [categorias, niveis] = await Promise.all([api('/api/categorias'), api('/api/niveis')])
+    $('fCategoria').replaceChildren(new Option('Todas', ''), ...categorias.map(c => new Option(c.nome, c.id)))
+    $('fDificuldade').replaceChildren(new Option('Todas', ''), ...niveis.map(n => new Option(n, n)))
+  }
+
+  async function carregarHistorico(){
+    const parametros = new URLSearchParams()
+    if ($('fCategoria').value) parametros.set('categoriaId', $('fCategoria').value)
+    if ($('fDificuldade').value) parametros.set('dificuldade', $('fDificuldade').value)
+    if ($('fResultado').value) parametros.set('resultado', $('fResultado').value)
+
+    try {
+      const registros = await api('/api/historico?' + parametros)
+      $('msg').textContent = ""
+
+      if (!registros.length) {
+        const vazio = document.createElement('p')
+        vazio.className = 'vazio'
+        vazio.textContent = "Nenhum exercício encontrado."
+        $('lista').replaceChildren(vazio)
+        return
+      }
+
+      $('lista').replaceChildren(...registros.map(r => {
+        const caixa = document.createElement('article')
+        caixa.className = 'item'
+
+        const meta = document.createElement('div')
+        meta.className = 'meta'
+        const selo = document.createElement('span')
+        selo.className = 'resultado ' + (r.correto ? 'acertou' : 'errou')
+        selo.textContent = r.correto ? 'Acertou' : 'Errou'
+        meta.append(selo, `${r.categoria} · ${r.dificuldade} · ${new Date(r.data).toLocaleString('pt-BR')}`)
+
+        const enunciado = document.createElement('p')
+        enunciado.textContent = r.enunciado
+
+        const alternativas = document.createElement('ul')
+        r.alternativas.forEach((texto, i) => {
+          const item = document.createElement('li')
+          const marcas = []
+          if (i === r.respostaCorreta) { item.className = 'certa'; marcas.push('✓ correta') }
+          if (i === r.resposta) marcas.push('sua resposta')
+          item.textContent = marcas.length ? `${texto} (${marcas.join(', ')})` : texto
+          alternativas.appendChild(item)
+        })
+
+        caixa.append(meta, enunciado, alternativas)
+        return caixa
+      }))
+    } catch (erro) {
+      $('msg').textContent = erro.message
+      $('msg').style.color = "#9b1c1c"
+    }
+  }
+
+  ;['fCategoria', 'fDificuldade', 'fResultado'].forEach(id => $(id).addEventListener('change', carregarHistorico))
+
+  carregarFiltros().then(carregarHistorico).catch(erro => { $('msg').textContent = erro.message })
+</script>
+</body>
+</html>

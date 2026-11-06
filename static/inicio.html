@@ -7,17 +7,108 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
 <style>
-  :root{--fundo:#c3dde3;--barra:#55b4d8;--botao:#4a7fc1;--texto:#1d2b4a}
-  *{box-sizing:border-box}
-  body{margin:0;background:#9fc2cc;font-family:'Libre Baskerville',Georgia,serif;color:var(--texto);display:flex;justify-content:center}
-  .tela{width:100%;max-width:420px;min-height:100vh;background:var(--fundo) url(images/mapa.png) no-repeat top center/100% auto;padding:40px 28px}
-  h1{margin:0 0 48px;font-style:italic;font-weight:400;letter-spacing:.2em;text-transform:uppercase;text-align:center;font-size:24px;line-height:1.5}
-  .grade{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-  .card{display:flex;flex-direction:column;justify-content:center;align-items:center;aspect-ratio:1;padding:16px;border-radius:8px;background:var(--botao);color:#fff;text-decoration:none;text-align:center;transition:background-color .2s ease}
-  .card:hover{background:var(--barra);color:var(--texto)}
-  .card:focus-visible{outline:3px solid var(--texto)}
-  .icon{font-size:48px;margin-bottom:10px}
-  .card h3{margin:0;font-size:16px;font-weight:400;letter-spacing:.1em}
+    :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #9fc2cc;
+        font-family: 'Libre Baskerville', Georgia, serif;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+    }
+
+    .tela {
+        width: 100%;
+        max-width: 420px;
+        min-height: 100vh;
+        background: var(--fundo) url(images/mapa.png) no-repeat top center/100% auto;
+        padding: 40px 28px;
+    }
+
+    h1 {
+        margin: 0 0 48px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 24px;
+        line-height: 1.5;
+    }
+
+    .grade {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 16px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 1;
+        padding: 16px;
+        border-radius: 8px;
+        background: var(--botao);
+        color: #fff;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color .2s ease;
+    }
+
+    .card:hover {
+        background: var(--barra);
+        color: var(--texto);
+    }
+
+    .card:focus-visible {
+        outline: 3px solid var(--texto);
+    }
+
+    .icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+    }
+
+    .card h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: .1em;
+    }
+
+    .sair {
+        display: block;
+        margin: 32px auto 0;
+        padding: 10px 26px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--texto);
+        color: #fff;
+        font: inherit;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .sair:hover {
+        background: #34476f;
+    }
+
+    .sair:focus-visible {
+        outline: 3px solid var(--texto);
+        outline-offset: 2px;
+    }
 </style>
 </head>
 <body>
@@ -40,7 +131,27 @@
       <span class="icon material-symbols-rounded">cognition</span>
       <h3>Level</h3>
     </a>
+    <a href="historico.html" class="card">
+      <span class="icon material-symbols-rounded">history</span>
+      <h3>Histórico</h3>
+    </a>
+    <a href="desempenho.html" class="card">
+      <span class="icon material-symbols-rounded">monitoring</span>
+      <h3>Desempenho</h3>
+    </a>
   </div>
+  <button type="button" class="sair" id="sair">Sair</button>
 </main>
+
+<script>
+  //logout: encerra a sessão no servidor e volta para a tela inicial
+  document.getElementById('sair').addEventListener('click', async () => {
+    try {
+      await fetch('/logout', { method: 'POST' })
+    } finally {
+      window.location.href = '/login.html'
+    }
+  })
+</script>
 </body>
 </html>

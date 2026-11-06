@@ -6,29 +6,144 @@
 <title>Questionário</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
 <style>
-  :root{--fundo:#c3dde3;--botao:#4a7fc1;--texto:#1d2b4a}
-  *{box-sizing:border-box}
-  body{margin:0;background:#9fc2cc;font-family:'Libre Baskerville',Georgia,serif;color:var(--texto);display:flex;justify-content:center}
-  .tela{width:100%;max-width:420px;min-height:100vh;background:var(--fundo);padding:32px 36px}
-  .pagina{display:none}
-  .pagina.ativa{display:block}
-  .topo{position:relative;padding:44px 0;margin-bottom:12px}
-  .topo svg{position:absolute;left:50%;top:50%;width:240px;transform:translate(-50%,-50%);opacity:.55}
-  h2{position:relative;margin:0;font-style:italic;font-weight:400;letter-spacing:.15em;text-align:center;font-size:21px;line-height:1.5}
- 
-  .opcao{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 0;border:0;background:none;color:var(--texto);font:inherit;font-size:16px;letter-spacing:.1em;text-align:left;cursor:pointer}
-  .opcao::after{content:"";flex:none;width:20px;height:20px;border-radius:50%;background:var(--botao)}
-  .opcao.selecionado::after{content:"✓";display:grid;place-items:center;background:#fff;border:2px solid var(--texto);font-size:13px;font-weight:bold}
-  .opcao:focus-visible,.btn:focus-visible,.voltar:focus-visible{outline:3px solid var(--texto)}
-  .btn{display:block;margin:32px auto 0;padding:10px 26px;border:0;border-radius:4px;background:var(--botao);color:#fff;font:inherit;font-size:17px;cursor:pointer}
-  .btn:hover{background:#3b69a3}
-  .voltar{display:block;margin:16px auto 0;border:0;background:none;color:var(--botao);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+    :root {
+        --fundo: #c3dde3;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #9fc2cc;
+        font-family: 'Libre Baskerville', Georgia, serif;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+    }
+
+    .tela {
+        width: 100%;
+        max-width: 420px;
+        min-height: 100vh;
+        background: var(--fundo);
+        padding: 32px 36px;
+    }
+
+    .pagina {
+        display: none;
+    }
+
+    .pagina.ativa {
+        display: block;
+    }
+
+    .topo {
+        position: relative;
+        padding: 44px 0;
+        margin-bottom: 12px;
+    }
+
+    .topo svg {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 240px;
+        transform: translate(-50%,-50%);
+        opacity: .55;
+    }
+
+    h2 {
+        position: relative;
+        margin: 0;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .15em;
+        text-align: center;
+        font-size: 21px;
+        line-height: 1.5;
+    }
+
+    /* cada opção: texto à esquerda, bolinha à direita */
+
+    .opcao {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 9px 0;
+        border: 0;
+        background: none;
+        color: var(--texto);
+        font: inherit;
+        font-size: 16px;
+        letter-spacing: .1em;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .opcao::after {
+        content: "";
+        flex: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--botao);
+    }
+
+    .opcao.selecionado::after {
+        content: "✓";
+        display: grid;
+        place-items: center;
+        background: #fff;
+        border: 2px solid var(--texto);
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .opcao:focus-visible,
+    .btn:focus-visible,
+    .voltar:focus-visible {
+        outline: 3px solid var(--texto);
+    }
+
+    .btn {
+        display: block;
+        margin: 32px auto 0;
+        padding: 10px 26px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--botao);
+        color: #fff;
+        font: inherit;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background: #3b69a3;
+    }
+
+    .voltar {
+        display: block;
+        margin: 16px auto 0;
+        border: 0;
+        background: none;
+        color: var(--botao);
+        font: inherit;
+        font-size: 14px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 </style>
 </head>
 <body>
 <main class="tela">
 
-
+  <!-- Seleção de dias (protótipo, imagem 4) -->
   <section id="form-datas" class="pagina ativa">
     <div class="topo">
       <svg viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#4a7fc1" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><ellipse cx="100" cy="100" rx="40" ry="90"/><ellipse cx="100" cy="100" rx="75" ry="90"/><path d="M10 100h180M22 60h156M22 140h156"/></g></svg>
@@ -44,7 +159,7 @@
     <button type="button" class="btn" onclick="proximaPagina('form-datas','form-nivel')">Continue</button>
   </section>
 
-  
+  <!-- Seleção de nível (protótipo, imagem 5) -->
   <section id="form-nivel" class="pagina">
     <div class="topo">
       <svg viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#4a7fc1" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><ellipse cx="100" cy="100" rx="40" ry="90"/><ellipse cx="100" cy="100" rx="75" ry="90"/><path d="M10 100h180M22 60h156M22 140h156"/></g></svg>
@@ -61,21 +176,22 @@
 </main>
 
 <script>
- 
+  //função de marcar a opção desejada
   function selecionar(elemento){
     let secaoAtual = elemento.closest('section');
 
+    //o formulário de nível aceita apenas uma escolha
     if (secaoAtual.id === 'form-nivel'){
       secaoAtual.querySelectorAll('.opcao').forEach(function(item){
         item.classList.remove('selecionado')
       })
       elemento.classList.add('selecionado')
-    } else {    
+    } else {    //o formulário de dias permite múltipla escolha
       elemento.classList.toggle('selecionado')
     }
   }
 
- 
+  //função para enviar o questionário
   async function enviarForm(){
     const diasEscolhidos = Array.from(document.querySelectorAll('#form-datas .opcao.selecionado')).map(el => el.textContent.trim());
     const nivelEscolhido = document.querySelector('#form-nivel .opcao.selecionado');
@@ -106,11 +222,12 @@
     }
   }
 
-
+  //função para mudar de página
   function proximaPagina(paginaAtual,proxPagina){
     let secaoAtual = document.getElementById(paginaAtual);
     let escolhida = secaoAtual.querySelector('.opcao.selecionado')
 
+    //exige ao menos um dia antes de continuar
     if (paginaAtual === 'form-datas' && !escolhida){
       alert('Selecione uma das opções')
       return;

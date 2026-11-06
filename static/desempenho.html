@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desempenho</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&display=swap">
+<style>
+    :root {
+        --fundo: #c3dde3;
+        --barra: #55b4d8;
+        --botao: #4a7fc1;
+        --texto: #1d2b4a;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #9fc2cc;
+        font-family: 'Libre Baskerville', Georgia, serif;
+        color: var(--texto);
+        display: flex;
+        justify-content: center;
+    }
+
+    .tela {
+        width: 100%;
+        max-width: 620px;
+        min-height: 100vh;
+        background: var(--fundo);
+        padding: 32px 28px;
+    }
+
+    h1 {
+        margin: 0 0 24px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 22px;
+    }
+
+    h2 {
+        margin: 32px 0 8px;
+        font-size: 17px;
+    }
+
+    a:focus-visible {
+        outline: 3px solid var(--texto);
+    }
+
+    .resumo {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 10px;
+    }
+
+    .numero {
+        padding: 16px 8px;
+        border-radius: 6px;
+        background: var(--botao);
+        color: #fff;
+        text-align: center;
+    }
+
+    .numero strong {
+        display: block;
+        font-size: 26px;
+    }
+
+    .numero span {
+        font-size: 12px;
+    }
+
+    .linha {
+        margin-top: 12px;
+        font-size: 14px;
+    }
+
+    .trilho {
+        height: 14px;
+        margin-top: 4px;
+        border-radius: 7px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .preenchido {
+        height: 100%;
+        background: var(--botao);
+    }
+
+    .vazio,
+    .msg {
+        margin-top: 24px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .voltar {
+        display: block;
+        margin-top: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--botao);
+    }
+</style>
+</head>
+<body>
+<main class="tela">
+  <h1>Desempenho</h1>
+  <p class="msg" id="msg" role="status"></p>
+  <div id="conteudo"></div>
+  <a class="voltar" href="inicio.html">Voltar ao início</a>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id)
+
+  //uma barra de progresso com o nome e "acertos/respondidos (porcentagem)"
+  function barra(nome, dados){
+    const porcentagem = dados.respondidos ? Math.round(dados.acertos / dados.respondidos * 100) : 0
+
+    const linha = document.createElement('div')
+    linha.className = 'linha'
+    linha.textContent = `${nome}: ${dados.acertos}/${dados.respondidos} (${porcentagem}%)`
+
+    const trilho = document.createElement('div')
+    trilho.className = 'trilho'
+    trilho.setAttribute('role', 'progressbar')
+    trilho.setAttribute('aria-label', `Acertos em ${nome}`)
+    trilho.setAttribute('aria-valuemin', '0')
+    trilho.setAttribute('aria-valuemax', '100')
+    trilho.setAttribute('aria-valuenow', porcentagem)
+
+    const preenchido = document.createElement('div')
+    preenchido.className = 'preenchido'
+    preenchido.style.width = porcentagem + '%'
+    trilho.appendChild(preenchido)
+
+    linha.appendChild(trilho)
+    return linha
+  }
+
+  function numero(valor, rotulo){
+    const caixa = document.createElement('div')
+    caixa.className = 'numero'
+    const forte = document.createElement('strong')
+    forte.textContent = valor
+    const texto = document.createElement('span')
+    texto.textContent = rotulo
+    caixa.append(forte, texto)
+    return caixa
+  }
+
+  function secao(titulo, grupos){
+    const entradas = Object.entries(grupos)
+    if (!entradas.length) return []
+    const h2 = document.createElement('h2')
+    h2.textContent = titulo
+    return [h2, ...entradas.map(([nome, dados]) => barra(nome, dados))]
+  }
+
+  async function carregar(){
+    try {
+      const resposta = await fetch('/api/progresso')
+      if (resposta.status === 401) { window.location.href = '/login.html#entrar'; return }
+      const dados = await resposta.json().catch(() => null)
+      if (!dados) throw new Error("O servidor não respondeu como esperado. Confira se o server.js foi atualizado e reiniciado.")
+      if (!resposta.ok) throw new Error(dados.error || "Erro ao falar com o servidor.")
+
+      if (!dados.total.respondidos) {
+        $('msg').textContent = "Você ainda não respondeu nenhum exercício."
+        return
+      }
+
+      const resumo = document.createElement('div')
+      resumo.className = 'resumo'
+      resumo.append(
+        numero(dados.total.taxaAcerto + '%', 'de acerto'),
+        numero(dados.total.respondidos, 'respondidos'),
+        numero(dados.total.acertos, 'acertos')
+      )
+
+      $('conteudo').replaceChildren(
+        resumo,
+        ...secao('Por categoria', dados.porCategoria),
+        ...secao('Por dificuldade', dados.porDificuldade)
+      )
+    } catch (erro) {
+      $('msg').textContent = erro.message
+      $('msg').style.color = "#9b1c1c"
+    }
+  }
+
+  carregar()
+</script>
+</body>
+</html>
