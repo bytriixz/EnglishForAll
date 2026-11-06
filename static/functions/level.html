@@ -363,13 +363,15 @@
           const status = document.createElement("span");
           status.className = "status";
 
-          if (nivel === nivelAtual) {
+          if (indice === indiceAtual) {
             item.classList.add("atual");
             status.textContent = "Seu nível atual";
+          } else if (indice > indiceAtual) {
+            item.classList.add("bloqueado");
+            status.textContent = "🔒 Bloqueado";
           } else {
-            status.textContent = "Nível disponível";
+            status.textContent = "Disponível";
           }
-
           detalhes.append(titulo, descricao);
           item.append(numero, detalhes, status);
           lista.appendChild(item);
