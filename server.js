@@ -115,7 +115,10 @@ Exercicio.hasMany(Progresso, { foreignKey: 'exercicioId', onDelete: 'CASCADE' })
 Progresso.belongsTo(Exercicio, { foreignKey: 'exercicioId', as: 'exercicio' });
 
 //mantém as tabelas atualizadas (alter: true adiciona as colunas novas sem apagar os dados)
+//await sequelize.sync({ alter: true });
+await sequelize.query('PRAGMA foreign_keys = OFF;');
 await sequelize.sync({ alter: true });
+await sequelize.query('PRAGMA foreign_keys = ON;');
 
 //transforma em admin o usuário indicado no arquivo .env (ADMIN_USERNAME=nome_do_usuario)
 if (process.env.ADMIN_USERNAME) {
