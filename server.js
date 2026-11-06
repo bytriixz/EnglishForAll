@@ -475,6 +475,20 @@ app.get("/api/historico", exigirLogin, rota(async (req, res) => {
   res.json(historicoFormatado);
 }));
 
+// Retorna os exercícios que o usuário ainda não respondeu corretamente ou lista para estudo
+app.get("/api/tolearn", exigirLogin, rota(async (req, res) => {
+  const exercicios = await Exercicio.findAll({
+    include: { model: Categoria, as: 'categoria' },
+    order: [['id', 'DESC']]
+  });
+
+  const admin = req.session.user.isAdmin;
+  res.json(exercicios.map((e) => {
+    const dados = e.toJSON();
+    if (!admin) delete dados.respostaCorreta; // Oculta a resposta correta do aluno
+    return dados;
+  }));
+}));
 
 //-------INICIALIZAÇÃO-------
 
