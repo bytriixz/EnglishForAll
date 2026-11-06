@@ -191,7 +191,15 @@
             if (response.ok) {
                 msg.textContent = "Login Realizado com sucesso.";
                 msg.style.color = "green";
-                setTimeout(() => window.location.href = "/questionario.html", 1000);
+
+                //verifica se o questionário já foi respondido e direciona o usuário
+                setTimeout(() => {
+                    if (data.questRespondido){
+                        window.location.href = "/inicio.html"
+                    }else{
+                        window.location.href = "/questionario.html"
+                     }
+                },1000);
             
         //mensagens de erro
             }else {
