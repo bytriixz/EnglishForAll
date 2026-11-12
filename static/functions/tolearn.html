@@ -192,6 +192,17 @@
         color: #4a5a7c;
         margin-top: 50px;
       }
+      
+      .voltar {
+        display: block;
+        margin-top: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--botao);
+      }
+      .voltar:focus-visible {
+        outline: 3px solid var(--texto);
+      }
 
       @media (max-width: 768px) {
         .container {
@@ -242,6 +253,9 @@
           <button type="button" class="btn" id="btnAnterior" style="width: 48%;">Anterior</button>
           <button type="button" class="btn" id="btnProximo" style="width: 48%;">Próximo</button>
         </div>
+        </section>
+          <a class="voltar" href="/inicio.html">Voltar ao início</a>
+        </section>
       </main>
     </div>
 

@@ -119,6 +119,17 @@
         border-bottom: none;
       }
 
+       .voltar {
+        display: block;
+        margin-top: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--botao);
+      }
+      .voltar:focus-visible {
+        outline: 3px solid var(--texto);
+      }
+
       /* Responsividade para telas menores */
       @media (max-width: 768px) {
         .container {
@@ -161,8 +172,12 @@
         
         <div class="word-list" id="listaAprendidos">
           <p class="vazio">Carregando conteúdos aprendidos...</p>
-        </div>
+        </div> 
+      </section>
+        <a class="voltar" href="/inicio.html">Voltar ao início</a>
+      </section>
       </main>
+      
     </div>
 
     <script>
