@@ -23,21 +23,26 @@
 
     body {
         margin: 0;
+        min-height: 100vh;
         background: #9fc2cc;
         font-family: 'Libre Baskerville', Georgia, serif;
         color: var(--texto);
         display: flex;
         justify-content: center;
+        align-items: center;
+        padding: 30px;
     }
 
     /* O mapa-múndi vem do arquivo images/mapa.png (recorte do protótipo). Sem ele, o fundo fica liso. */
 
     .tela {
         width: 100%;
-        max-width: 420px;
-        min-height: 100vh;
+        max-width: 700px;
+        min-height: 580px;
         background: var(--fundo) url(images/mapa.png) no-repeat top center/100% auto;
         padding: 40px 28px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     }
 
     h1 {
@@ -108,6 +113,15 @@
     a {
         color: var(--botao);
     }
+
+    @media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    .tela {
+        padding: 30px 22px;
+    }
+}
 </style>
 </head>
 <body>
