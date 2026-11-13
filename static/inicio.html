@@ -23,33 +23,77 @@
         background: #9fc2cc;
         font-family: 'Libre Baskerville', Georgia, serif;
         color: var(--texto);
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Botão fixo exatamente no canto superior esquerdo da tela */
+    .btn-admin {
+        position: absolute;
+        top: 25px;
+        left: 30px;
+        padding: 8px 16px;
+        border-radius: 4px;
+        background: var(--texto);
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        transition: background-color .2s ease;
+        z-index: 10;
+    }
+
+    .btn-admin:hover {
+        background: #34476f;
+    }
+
+    .btn-admin:focus-visible {
+        outline: 3px solid var(--texto);
+        outline-offset: 2px;
+    }
+
+    /* Wrapper para centralizar apenas o container sem esticá-lo */
+    .wrapper-central {
         display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 30px;
+    }
+
+    /* Container principal com o mesmo tamanho fixo exato da página Learned */
+    .tela {
+        width: 100%;
+        max-width: 850px;
+        min-height: 480px;
+        background: var(--fundo) url(images/mapa.png) no-repeat center center/cover;
+        padding: 35px 60px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+        display: flex;
+        flex-direction: column;
         justify-content: center;
     }
 
-    .tela {
-        width: 100%;
-        max-width: 420px;
-        min-height: 100vh;
-        background: var(--fundo) url(images/mapa.png) no-repeat top center/100% auto;
-        padding: 40px 28px;
-    }
-
     h1 {
-        margin: 0 0 48px;
+        margin: 0 0 20px;
         font-style: italic;
         font-weight: 400;
         letter-spacing: .2em;
         text-transform: uppercase;
         text-align: center;
         font-size: 24px;
-        line-height: 1.5;
+        line-height: 1.4;
     }
 
+    /* Grid com 3 colunas dimensionada para se encaixar perfeitamente */
     .grade {
         display: grid;
-        grid-template-columns: repeat(2,1fr);
-        gap: 16px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        max-width: 560px;
+        width: 100%;
+        margin: 0 auto;
     }
 
     .card {
@@ -57,19 +101,20 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        aspect-ratio: 1;
-        padding: 16px;
+        height: 110px;
+        padding: 12px;
         border-radius: 8px;
         background: var(--botao);
         color: #fff;
         text-decoration: none;
         text-align: center;
-        transition: background-color .2s ease;
+        transition: background-color .2s ease, transform .2s ease;
     }
 
     .card:hover {
         background: var(--barra);
         color: var(--texto);
+        transform: translateY(-2px);
     }
 
     .card:focus-visible {
@@ -77,28 +122,29 @@
     }
 
     .icon {
-        font-size: 48px;
-        margin-bottom: 10px;
+        font-size: 32px;
+        margin-bottom: 6px;
     }
 
     .card h3 {
         margin: 0;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 400;
         letter-spacing: .1em;
     }
 
     .sair {
         display: block;
-        margin: 32px auto 0;
-        padding: 10px 26px;
+        margin: 20px auto 0;
+        padding: 9px 30px;
         border: 0;
         border-radius: 4px;
         background: var(--texto);
         color: #fff;
         font: inherit;
-        font-size: 15px;
+        font-size: 14px;
         cursor: pointer;
+        transition: background-color .2s ease;
     }
 
     .sair:hover {
@@ -112,36 +158,41 @@
 </style>
 </head>
 <body>
-<main class="tela">
-  <h1>English<br>for all</h1>
-  <div class="grade">
-    <a href="functions/learned.html" class="card">
-      <span class="icon material-symbols-rounded">school</span>
-      <h3>Learned</h3>
-    </a>
-    <a href="functions/tolearn.html" class="card">
-      <span class="icon material-symbols-rounded">book_ribbon</span>
-      <h3>To Learn</h3>
-    </a>
-    <a href="functions/calendar.html" class="card">
-      <span class="icon material-symbols-rounded">calendar_month</span>
-      <h3>Calendar</h3>
-    </a>
-    <a href="functions/level.html" class="card">
-      <span class="icon material-symbols-rounded">cognition</span>
-      <h3>Level</h3>
-    </a>
-    <a href="historico.html" class="card">
-      <span class="icon material-symbols-rounded">history</span>
-      <h3>Histórico</h3>
-    </a>
-    <a href="desempenho.html" class="card">
-      <span class="icon material-symbols-rounded">monitoring</span>
-      <h3>Desempenho</h3>
-    </a>
-  </div>
-  <button type="button" class="sair" id="sair">Sair</button>
-</main>
+<!-- Botão posicionado fora do container, fixo no canto superior esquerdo da tela -->
+<a href="admin.html" class="btn-admin">Página do Administrador</a>
+
+<div class="wrapper-central">
+  <main class="tela">
+    <h1>English<br>for all</h1>
+    <div class="grade">
+      <a href="functions/learned.html" class="card">
+        <span class="icon material-symbols-rounded">school</span>
+        <h3>Learned</h3>
+      </a>
+      <a href="functions/tolearn.html" class="card">
+        <span class="icon material-symbols-rounded">book_ribbon</span>
+        <h3>To Learn</h3>
+      </a>
+      <a href="functions/calendar.html" class="card">
+        <span class="icon material-symbols-rounded">calendar_month</span>
+        <h3>Calendar</h3>
+      </a>
+      <a href="functions/level.html" class="card">
+        <span class="icon material-symbols-rounded">cognition</span>
+        <h3>Level</h3>
+      </a>
+      <a href="historico.html" class="card">
+        <span class="icon material-symbols-rounded">history</span>
+        <h3>Histórico</h3>
+      </a>
+      <a href="desempenho.html" class="card">
+        <span class="icon material-symbols-rounded">monitoring</span>
+        <h3>Desempenho</h3>
+      </a>
+    </div>
+    <button type="button" class="sair" id="sair">Sair</button>
+  </main>
+</div>
 
 <script>
   //logout: encerra a sessão no servidor e volta para a tela inicial
