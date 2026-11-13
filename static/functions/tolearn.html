@@ -271,15 +271,19 @@
             window.location.href = '/login.html#entrar';
             return;
           }
+          if (resposta.status === 403) {
+            const erro = await resposta.json();
+            area.textContent = erro.error;
+            return;
+          }
           if (!resposta.ok) throw new Error("Erro ao buscar exercícios.");
           
           exercicios = await resposta.json();
 
-          if (exercicios.length === 0) {
-            area.innerHTML = '<p class="vazio">Nenhum exercício cadastrado no momento. Peça ao administrador para adicionar novos itens!</p>';
+         if (exercicios.length === 0) {
+            area.innerHTML = '<p class="vazio">Não há exercícios disponíveis para seu nível no momento.</p>';
             return;
           }
-
           exibirExercicio(indiceAtual);
         } catch (erro) {
           console.error(erro);
