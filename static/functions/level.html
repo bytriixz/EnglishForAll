@@ -185,6 +185,17 @@
         white-space: nowrap;
       }
 
+      .item-nivel.bloqueado {
+        opacity: 0.55;
+        background: #e5e5e5;
+      }
+      .item-nivel.bloqueado .numero {
+          background: #999;
+      }
+      .item-nivel.bloqueado .status {
+          color: #777;
+      }
+
       .voltar {
         display: block;
         margin-top: 28px;
@@ -340,45 +351,48 @@
       // Mostra os níveis disponíveis
       function mostrarNiveis(niveis, nivelAtual) {
         const lista = $("lista-niveis");
-
         lista.replaceChildren();
 
-        const indiceAtual = niveis.indexOf(nivelAtual);
+        // Nulo será considerado equivalente a Iniciante.
+        const nivelComparacao =
+            nivelAtual === "Nulo" ? "Iniciante" : nivelAtual;
 
-        niveis.forEach((nivel, indice) => {
-          const item = document.createElement("div");
-          item.className = "item-nivel";
+        // Nulo não aparece como uma categoria separada de estudo.
+        const niveisExibidos = niveis.filter(nivel => nivel !== "Nulo");
+        const indiceAtual = niveisExibidos.indexOf(nivelComparacao);
 
-          const numero = document.createElement("div");
-          numero.className = "numero";
-          numero.textContent = String(indice + 1).padStart(2, "0");
-          const detalhes = document.createElement("div");
-          detalhes.className = "detalhes";
-
-          const titulo = document.createElement("h3");
-          titulo.textContent = nivel;
-
-          const descricao = document.createElement("p");
-          descricao.textContent =
-            descricoes[nivel] || "Conteúdos para desenvolver seu inglês.";
-
-          const status = document.createElement("span");
-          status.className = "status";
-
-          if (indice === indiceAtual) {
-            item.classList.add("atual");
-            status.textContent = "Seu nível atual";
-          } else if (indice > indiceAtual) {
-            item.classList.add("bloqueado");
-            status.textContent = "🔒 Bloqueado";
-          } else {
-            status.textContent = "Disponível";
-          }
-          detalhes.append(titulo, descricao);
-          item.append(numero, detalhes, status);
-          lista.appendChild(item);
+        niveisExibidos.forEach((nivel, indice) => {
+            const item = document.createElement("div");
+            item.className = "item-nivel";
+            const numero = document.createElement("div");
+            numero.className = "numero";
+            numero.textContent = String(indice + 1).padStart(2, "0");
+            const detalhes = document.createElement("div");
+            detalhes.className = "detalhes";
+            const titulo = document.createElement("h3");
+            titulo.textContent = nivel;
+            const descricao = document.createElement("p");
+            descricao.textContent =
+                descricoes[nivel] || "Conteúdos para desenvolver seu inglês.";
+            const status = document.createElement("span");
+            status.className = "status";
+            if (indiceAtual === -1) {
+                item.classList.add("bloqueado");
+                status.textContent = "Responda ao questionário";
+            } else if (indice === indiceAtual) {
+                item.classList.add("atual");
+                status.textContent = "Seu nível atual";
+            } else if (indice < indiceAtual) {
+                status.textContent = "Disponível";
+            } else {
+                item.classList.add("bloqueado");
+                status.textContent = "🔒 Bloqueado";
+            }
+            detalhes.append(titulo, descricao);
+            item.append(numero, detalhes, status);
+            lista.appendChild(item);
         });
-      }
+    }
       carregarNivel();
     </script>
   </body>
