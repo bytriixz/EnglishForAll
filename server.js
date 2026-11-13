@@ -10,6 +10,18 @@ const PORT = process.env.PORT || 3000;
 
 
 const NIVEIS = ['Nulo', 'Iniciante', 'Intermediário', 'Avançado'];
+const ORDEM_NIVEIS = {
+    "Nulo": 1,
+    "Iniciante": 1,
+    "Intermediário": 2,
+    "Avançado": 3
+};
+
+function nivelPermitido(nivelUsuario, nivelAtividade) {
+    return ORDEM_NIVEIS[nivelUsuario] !== undefined &&
+           ORDEM_NIVEIS[nivelAtividade] !== undefined &&
+           ORDEM_NIVEIS[nivelAtividade] <= ORDEM_NIVEIS[nivelUsuario];
+}
 
 
 app.use(express.json());
@@ -287,22 +299,39 @@ app.post("/api/admin/categorias", exigirLogin, exigirAdmin, async (req, res) => 
 
 
 app.get("/api/exercicios", exigirLogin, rota(async (req, res) => {
-  const where = {};
-  if (req.query.categoriaId) where.categoriaId = req.query.categoriaId;
-  if (req.query.dificuldade) where.dificuldade = req.query.dificuldade;
+   const where = {};
+    if (req.query.categoriaId) {
+        where.categoriaId = req.query.categoriaId;
+    }
+    if (req.query.dificuldade) {
+        where.dificuldade = req.query.dificuldade;
+    }
+    let lista = await Exercicio.findAll({
+        where,
+        include: { model: Categoria, as: 'categoria' },
+        order: [['id', 'DESC']]
+    });
+    const admin = req.session.user.isAdmin;
+    if (!admin) {
+        const usuario = await Usuario.findByPk(req.session.user.id);
+        if (!usuario || !usuario.questRespondido) {
+            return res.status(403).json({
+                error: "Responda ao questionário para acessar os exercícios."
+            });
+        }
+        lista = lista.filter(e =>
+            nivelPermitido(usuario.nivel, e.dificuldade)
+        );
+    }
+    res.json(lista.map(e => {
+        const dados = e.toJSON();
 
-  const lista = await Exercicio.findAll({
-    where,
-    include: { model: Categoria, as: 'categoria' },
-    order: [['id', 'DESC']],
-  });
+        if (!admin) {
+            delete dados.respostaCorreta;
+        }
 
-  const admin = req.session.user.isAdmin;
-  res.json(lista.map((e) => {
-    const dados = e.toJSON();
-    if (!admin) delete dados.respostaCorreta;
-    return dados;
-  }));
+        return dados;
+    }));
 }));
 
 app.post("/api/admin/exercicios", exigirLogin, exigirAdmin, rota(async (req, res) => {
@@ -349,6 +378,16 @@ app.delete("/api/admin/exercicios/:id", exigirLogin, exigirAdmin, rota(async (re
 app.post("/api/exercicios/:id/responder", exigirLogin, rota(async (req, res) => {
   const exercicio = await Exercicio.findByPk(req.params.id);
   if (!exercicio) return res.status(404).json({ error: "Exercício não encontrado." });
+  if (!req.session.user.isAdmin) {
+    const usuario = await Usuario.findByPk(req.session.user.id);
+    if (!usuario || !usuario.questRespondido ||
+        !nivelPermitido(usuario.nivel, exercicio.dificuldade)) {
+
+        return res.status(403).json({
+            error: "Você não tem acesso a esta atividade."
+        });
+    }
+}
 
   const { resposta } = req.body;
   if (!Number.isInteger(resposta) || resposta < 0 || resposta >= exercicio.alternativas.length) {
@@ -416,28 +455,40 @@ app.get("/api/usuario-dados", exigirLogin, async (req, res) => {
 
 // Retorna os exercícios que o aluno respondeu CORRETAMENTE (Learned)
 app.get("/api/aprendidos", exigirLogin, rota(async (req, res) => {
-  const progresosCertos = await Progresso.findAll({
-    where: { 
-      usuarioId: req.session.user.id,
-      correto: true 
-    },
-    include: { 
-      model: Exercicio, 
-      as: 'exercicio', 
-      include: { model: Categoria, as: 'categoria' } 
-    },
-    order: [['createdAt', 'DESC']]
-  });
+   let progresosCertos = await Progresso.findAll({
+        where: {
+            usuarioId: req.session.user.id,
+            correto: true
+        },
+        include: {
+            model: Exercicio,
+            as: 'exercicio',
+            include: { model: Categoria, as: 'categoria' }
+        },
+        order: [['createdAt', 'DESC']]
+    });
+    const admin = req.session.user.isAdmin;
+    if (!admin) {
+        const usuario = await Usuario.findByPk(req.session.user.id);
+        if (!usuario || !usuario.questRespondido) {
+            return res.status(403).json({
+                error: "Responda ao questionário primeiro."
+            });
+        }
+        progresosCertos = progresosCertos.filter(p =>
+            p.exercicio &&
+            nivelPermitido(usuario.nivel, p.exercicio.dificuldade)
+        );
+    }
+    const aprendidos = progresosCertos.map(p => ({
+        id: p.id,
+        enunciado: p.exercicio?.enunciado,
+        alternativas: p.exercicio?.alternativas,
+        respostaCorreta: p.exercicio?.respostaCorreta,
+        categoria: p.exercicio?.categoria?.nome || 'Geral'
+    }));
 
-  const aprendidos = progresosCertos.map(p => ({
-    id: p.id,
-    enunciado: p.exercicio?.enunciado,
-    alternativas: p.exercicio?.alternativas,
-    respostaCorreta: p.exercicio?.respostaCorreta,
-    categoria: p.exercicio?.categoria?.nome || 'Geral'
-  }));
-
-  res.json(aprendidos);
+    res.json(aprendidos);
 }));
 
 // Retorna o histórico completo com filtros (para a página historico.html)
@@ -463,7 +514,7 @@ app.get("/api/historico", exigirLogin, rota(async (req, res) => {
     order: [['createdAt', 'DESC']]
   });
 
-  const historicoFormatado = registros.map(p => ({
+  let historicoFormatado = registros.map(p => ({
     id: p.id,
     correto: p.correto,
     resposta: p.resposta,
@@ -474,25 +525,50 @@ app.get("/api/historico", exigirLogin, rota(async (req, res) => {
     dificuldade: p.exercicio?.dificuldade,
     categoria: p.exercicio?.categoria?.nome || 'Geral'
   }));
+  if (!req.session.user.isAdmin) {
+    const usuario = await Usuario.findByPk(req.session.user.id);
+    if (!usuario || !usuario.questRespondido) {
+        return res.status(403).json({
+            error: "Responda ao questionário primeiro."
+        });
+    }
+    historicoFormatado = historicoFormatado.filter(item =>
+        nivelPermitido(usuario.nivel, item.dificuldade)
+    );
+}
+  
 
   res.json(historicoFormatado);
 }));
 
 // Retorna os exercícios que o usuário ainda não respondeu corretamente ou lista para estudo
 app.get("/api/tolearn", exigirLogin, rota(async (req, res) => {
-  const exercicios = await Exercicio.findAll({
-    include: { model: Categoria, as: 'categoria' },
-    order: [['id', 'DESC']]
-  });
+    let exercicios = await Exercicio.findAll({
+        include: { model: Categoria, as: 'categoria' },
+        order: [['id', 'DESC']]
+    });
+    const admin = req.session.user.isAdmin;
+    if (!admin) {
+        const usuario = await Usuario.findByPk(req.session.user.id);
+        if (!usuario || !usuario.questRespondido) {
+            return res.status(403).json({
+                error: "Responda ao questionário para acessar os exercícios."
+            });
+        }
+        exercicios = exercicios.filter(e =>
+            nivelPermitido(usuario.nivel, e.dificuldade)
+        );
+    }
 
-  const admin = req.session.user.isAdmin;
-  res.json(exercicios.map((e) => {
-    const dados = e.toJSON();
-    if (!admin) delete dados.respostaCorreta; // Oculta a resposta correta do aluno
-    return dados;
-  }));
+    res.json(exercicios.map(e => {
+        const dados = e.toJSON();
+        if (!admin) {
+            delete dados.respostaCorreta;
+        }
+        return dados;
+    }));
+
 }));
-
 
 //-------LOGOUT DO USUÁRIO-------
 
